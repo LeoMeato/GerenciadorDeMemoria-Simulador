@@ -1,5 +1,7 @@
 from TabelaDePaginas import *
 
+from collections import deque
+
 class Processo:
 
     id = -1
@@ -10,4 +12,13 @@ class Pagina:
 
 class FilaDeProcessos:
 
-    pass
+    def __init__(self, maxLength=None) -> None:
+        self.fila = []
+
+    def adicionar(self, processo):
+        self.fila.append(processo)
+
+    def remover(self):
+        processo = self.fila[0]
+        self.fila.pop(0)
+        return processo
