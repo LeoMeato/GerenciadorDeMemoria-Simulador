@@ -1,3 +1,2 @@
 class Swapper:
-
     pass

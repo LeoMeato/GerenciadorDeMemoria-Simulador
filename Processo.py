@@ -1,10 +1,6 @@
 from TabelaDePaginas import *
-
 from collections import deque
 
-class Processo:
-
-    id = -1
 
 class Pagina:
 

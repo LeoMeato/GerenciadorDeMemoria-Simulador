@@ -1,6 +1,15 @@
 from TabelaDePaginas import *
 from Processo import *
-from Memorias import *
+from MemoriaPrincipal import *
+from Quadro import *
+
+print("Informe numero de bits da pagina, e numero de bits dos quadros")
+tam_pag, tam_qua = input()
+memoria = MemoriaPrincipal(tam_pag, tam_qua) #Memoria Principal inicializada
+
+
+
+
 
 t = TabelaDePaginas(1, 10)
 f = FilaDeProcessos(5)

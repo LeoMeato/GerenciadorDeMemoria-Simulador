@@ -1,4 +1,8 @@
+from main import *
+
 class Quadro:
-    tempo_de_estadia = 0
-    pagina = None
-    pass
+
+    def __init___(self, last):
+        self.last_update = last
+        #print(clock)
+        print(1)
