@@ -1,8 +1,8 @@
 from TabelaDePaginas import *
-from collections import deque
+#from collections import deque
 
 
-class Pagina:
+class Processo:
 
     pass
 
