@@ -20,7 +20,7 @@ class MemoriaPrincipal:
             
     def mp_constroi_memoria(self, bits_log, bits_size):#Inicializacao da paginacao da memoria
         for i in range((2**bits_size)/(2**bits_log)):
-            self.quadros.append(Quadro())
+            self.quadros.append(Quadro(0))
 
 
     def mp_retira_pagina(self, index_quadro):#recebo do swapper a pagina calculada a ser retirada

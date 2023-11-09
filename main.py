@@ -4,7 +4,7 @@ from MemoriaPrincipal import *
 from Quadro import *
 
 print("Informe numero de bits da pagina, e numero de bits dos quadros")
-tam_pag, tam_qua = input()
+tam_pag, tam_qua = input().split()
 tam_pag = int(tam_pag)
 tam_qua = int(tam_qua)
 memoria = MemoriaPrincipal(tam_pag, tam_qua) #Memoria Principal inicializada

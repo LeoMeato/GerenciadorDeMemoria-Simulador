@@ -1,5 +1,3 @@
-from main import *
-
 class Quadro:
 
     def __init___(self, last):
