@@ -5,9 +5,10 @@ from TabelaDePaginas import *
 
 class Processo:
 
-    def __init__(self, tam) -> None:
-        self.paginas = [Pagina()] * tam
+    def __init__(self, tam, id) -> None:
+        self.paginas = [Pagina(id)] * tam
         self.pcb = Pcb()
+        self.id = id
     
 class Pcb:
 

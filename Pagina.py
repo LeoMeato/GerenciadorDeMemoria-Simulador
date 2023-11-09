@@ -1,3 +1,4 @@
 class Pagina():
     #deve haver um metodo que entregue uma copia dela mesma
-    pass
+    def __init__(self, id) -> None:
+        self.id_processo = id
