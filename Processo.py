@@ -1,10 +1,38 @@
+from Pagina import Pagina
 from TabelaDePaginas import *
 #from collections import deque
 
 
 class Processo:
 
-    pass
+    def __init__(self, tam) -> None:
+        self.paginas = [Pagina()] * tam
+        self.pcb = Pcb()
+    
+class Pcb:
+
+    def __init__(self) -> None:
+        self.estado = "novo"
+        self.suspenso = False
+
+    def setPronto(self):
+        self.estado = "pronto"
+    
+    def setBloqueado(self):
+        self.estado = "bloqueado"
+    
+    def setExecutando(self):
+        self.estado = "executando"
+
+    def setFinalizado(self):
+        self.estado = "finalizado"
+    
+    def setSuspensoTrue(self):
+        self.suspenso = True
+
+    def setSuspensoFalse(self):
+        self.suspenso = False
+    
 
 class FilaDeProcessos:
 
