@@ -18,15 +18,14 @@ class MemoriaSecundaria:
 
 
     #   Procedimento realizado no swap out de uma página qualquer da MP
-    #
     #   Recebe os valores adequados para representar uma página na MS
-    #
-    #   Retorna falha caso a adição da página exceda o limite de swap out do sistema, sucesso caso contrário
-    def swap_out(self, idProcesso, numPagina, pagina):
+    #   Explode o programa em caso de falha
+    def swap_out(self, idProcesso, numPagina, pagina) -> bool:
 
         if (pagina.size > self.free_space):
 
             print("Falta de memória secundária")
+            exit(1)
             return False
         
         self.free_space += pagina.size
@@ -35,9 +34,7 @@ class MemoriaSecundaria:
 
 
     #   Procedimento realizado no swap in de uma página para a MP
-    #
     #   Recebe os identificadores da página desejada
-    #
     #   Retorna uma cópia da página e libera o espaço adequado na MS em um fluxo normal
     #   Retorna falha caso as informações recebidas não façam sentido
     def swap_in(self, idProcesso, numPagina):
@@ -58,9 +55,7 @@ class MemoriaSecundaria:
     
 
 #   Classe interna: Registro da MS
-#
 #   Garante a organização das páginas armazenadas por swap out
-#
 #   Não deve existir fora da classe MS
 class RegistroMS:
 
