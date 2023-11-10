@@ -5,14 +5,19 @@ from TabelaDePaginas import *
 
 class Processo:
 
+    # IMPORTANTE: Refazer a geração das páginas do processo baseado no tamanho real
+
     def __init__(self, tam, id) -> None:
-        self.paginas = [Pagina(id)] * tam
-        self.pcb = Pcb()
-        self.id = id
+        self.paginas = [Pagina(id)]
+        self.pcb = Pcb(id, tam)
+
     
 class Pcb:
 
-    def __init__(self) -> None:
+    def __init__(self, id, tam) -> None:
+        
+        self.tam = tam
+        self.id = id
         self.estado = "novo"
         self.suspenso = False
 
@@ -34,16 +39,3 @@ class Pcb:
     def setSuspensoFalse(self):
         self.suspenso = False
     
-
-class FilaDeProcessos:
-
-    def __init__(self, maxLength=None) -> None:
-        self.fila = []
-
-    def adicionar(self, processo):
-        self.fila.append(processo)
-
-    def remover(self):
-        processo = self.fila[0]
-        self.fila.pop(0)
-        return processo
