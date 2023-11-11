@@ -23,3 +23,5 @@ for c in range(3):
 
 print(t.id, t.registros[6].numQuadro)
 print(f.fila)
+
+# Teste commit
