@@ -19,7 +19,7 @@ class MemoriaPrincipal:
 
     #bits_size = n (Tamanho total da memoria)
     # bits_log = m (Tamanho do quadro) 
-    def constroi_memoria(self, bits_log, bits_size):#Inicializacao da paginacao da memoria
+    def constroi_memoria(self):#Inicializacao da paginacao da memoria
         for i in range((2**self.bits_size)/(2**self.bits_log)):
             self.quadros.append(Quadro())#Setando o tempo de ultimo acesso como 0
 
@@ -33,8 +33,14 @@ class MemoriaPrincipal:
     def consulta_pagina(self, index_quadro):#Obtem a pagina para swapper analisar, ou para devida manipulacao como swapp-in
         return self.quadros[index_quadro].consulta_quadro()#Retorna None se o quadro estiver vazio
     
-    def consulta_tabela(self, index_tabela):
+    def consulta_tabela(self, index_tabela, pagina):
         return self.tabelas_de_paginas[index_tabela] #Retorno a tabela de paginas para consultar qual quadro esta a pagina
+    
+        ################################Vai mudar aqui, no caso consultar tp, depois verificar a pagina################################
+        #index_quadro = self.tabelas_de_paginas[index_tabela].consulta_quadro(pagina)
+        #if index_quadro == None:
+        #   return index_quadro
+        #return self.consulta_pagina(index_quadro)
     
     def tamanho_do_quadro(self):
         return 2**self.bits_log#Numero de enderecos disponiveis no quadro
