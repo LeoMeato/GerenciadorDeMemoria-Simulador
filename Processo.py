@@ -1,13 +1,17 @@
-from Pagina import Pagina
+from Pagina import Pagina, Agrupavel
 from TabelaDePaginas import *
 #from collections import deque
 
+class Processo(Agrupavel):
 
-class Processo:
+    label = "Sprites/Processo_Label.jpg"
+    content = ""
 
     # IMPORTANTE: Refazer a geração das páginas do processo baseado no tamanho real
 
     def __init__(self, tam, id) -> None:
+        self.id = id
+        self.content = "Processo {}".format(id)
         self.paginas = [Pagina(id)]
         self.pcb = Pcb(id, tam)
 
