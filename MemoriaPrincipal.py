@@ -20,7 +20,7 @@ class MemoriaPrincipal:
     #bits_size = n (Tamanho total da memoria)
     # bits_log = m (Tamanho do quadro) 
     def constroi_memoria(self):#Inicializacao da paginacao da memoria
-        for i in range((2**self.bits_size)/(2**self.bits_log)):
+        for i in range(int((2**self.bits_size)/(2**self.bits_log))):
             self.quadros.append(Quadro())#Setando o tempo de ultimo acesso como 0
 
 
