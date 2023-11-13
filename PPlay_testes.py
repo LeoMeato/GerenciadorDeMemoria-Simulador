@@ -3,6 +3,23 @@ from PPlay.sprite import *
 from Processo import *
 from Pagina import *
 
+class Container(Sprite):
+
+    def __init__(self, image_file, frames=1):
+        super().__init__(image_file, frames)
+        self.grupo = Sprite("Sprites/Vazio_Label.png")
+    
+    def draw(self):
+        super().draw()
+        self.grupo.set_position(self.x + 20, self.y + 6)
+        self.grupo.draw()
+    
+    def setContent(self, sprite):
+        self.grupo = sprite
+    
+    def popContent(self):
+        self.setContent(Sprite("Sprites/Vazio_Label.png"))
+
 class Grupo(Sprite):
      
      # Classe que estende Sprite e tem como função reunir um sprite de label e seu conteúdo (texto),
@@ -152,9 +169,23 @@ coluna.add(Grupo(Pagina(10)))
 coluna.remove(1)
 coluna.overwrite(1, g2)
 
+g5 = Grupo(Processo(4, 4))
+c1 = Container("Sprites/Quadro_Label.jpg")
+coluna.add(c1)
+
+c1.setContent(g5)
+
+MP = Coluna(400, 20)
+for i in range(7):
+    MP.add(Container("Sprites/Quadro_Label.jpg"))
+
+MP.array[4].setContent(g5)
+
+
 while True:
     janela.set_background_color([255, 255, 255])
     coluna.draw()
+    MP.draw()
     janela.update()
 
 
