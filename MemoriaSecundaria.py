@@ -17,15 +17,14 @@ class MemoriaSecundaria:
         self.registros = None
 
 
-    #   Procedimento realizado no swap out de uma página qualquer da MP
+    #   Procedimento realizado na inserção de uma página qualquer na MS
     #   Recebe os valores adequados para representar uma página na MS
     #   Explode o programa em caso de falha
     def swap_out(self, idProcesso, numPagina, pagina) -> bool:
 
         if (pagina.size > self.free_space):
 
-            print("Falta de memória secundária")
-            exit(1)
+            #print("Falta de memória secundária")
             return False
         
         self.free_space += pagina.size
