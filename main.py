@@ -1,9 +1,10 @@
+from Interface_funções import *
 from TabelaDePaginas import *
 from Processo import *
 from MemoriaPrincipal import *
 from Quadro import *
 from FilaDeProcessos import *
-from PPlay_testes import *
+from Interface_classes import *
 
 janela = Window(1280, 720)
 janela.set_title("Gerenciador de Memória")
@@ -20,10 +21,10 @@ coluna.pop(5)
 coluna.absoluteMove(20, 20)
 coluna.relativeMove(10, 10)'''
 
-p1 = Processo(4, 0)
-p2 = Processo(4, 1)
-p3 = Processo(4, 2)
-p4 = Processo(4, 3)
+p1 = Processo(4, 4, 0)
+p2 = Processo(4, 4, 1)
+p3 = Processo(4, 4, 2)
+p4 = Processo(4, 4, 3)
 
 g1 = Grupo(p1, janela)
 g2 = Grupo(p2, janela)
@@ -40,7 +41,7 @@ coluna.add(Grupo(Pagina(10), janela))
 coluna.remove(1)
 coluna.overwrite(1, g2)
 
-g5 = Grupo(Processo(4, 4), janela)
+g5 = Grupo(Processo(4, 4, 4), janela)
 c1 = Container("Sprites/Quadro_Label.jpg")
 coluna.add(c1)
 
@@ -51,7 +52,7 @@ for i in range(7):
     MP.add(Container("Sprites/Quadro_Label.jpg"))
 
 MP.array[4].setContent(g5)    
-
+'''
 print("Informe numero de bits da pagina, e numero de bits dos quadros")
 tam_pag, tam_qua = input().split()
 tam_pag = int(tam_pag)
@@ -67,7 +68,7 @@ for c in range(3):
     f.pronto.remover()
 
 print(t.id, t.registros[6].numQuadro)
-print(f.pronto.fila)
+print(f.pronto.fila)'''
 
 
 
@@ -76,7 +77,8 @@ while True:
     coluna.draw()
     MP.draw()
     janela.update()
-    valido = False # Será true quando o comando for válido
+    erro(janela, "oops")
+    '''valido = False # Será true quando o comando for válido
     processos = []
     id_processos = 0
     while (valido == False):
@@ -116,3 +118,4 @@ while True:
 
         else:
             print("Comando inválido")
+'''
