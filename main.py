@@ -11,7 +11,7 @@ janela.set_title("Gerenciador de Memória")
 Mouse = janela.get_mouse()
 teclado = janela.get_keyboard()
 
-coluna = Coluna(1400, 50)
+
 
 '''for i in range(10):
     coluna.add(Sprite("Sprites/Pagina_Label.jpg"))
@@ -21,29 +21,58 @@ coluna.pop(5)
 coluna.absoluteMove(20, 20)
 coluna.relativeMove(10, 10)'''
 
-p1 = Processo(4, 4, 0)
+MS = Coluna(1475, 30, "MS")
+
+p1 = Processo(16, 4, 0)
 p2 = Processo(4, 4, 1)
 p3 = Processo(4, 4, 2)
 p4 = Processo(4, 4, 3)
+
+processos = []
+for c in range(5, 40):
+    processos.append(Processo(20, 2, c))
 
 g1 = Grupo(p1, janela)
 g2 = Grupo(p2, janela)
 g3 = Grupo(p3, janela)
 g4 = Grupo(p4, janela)
 
-coluna.add(g1)
-coluna.add(g2)
-coluna.add(g3)
-coluna.add(g4)
+MS.add(g1)
+MS.add(g2)
+MS.add(g3)
+MS.add(g4)
 
-coluna.remove(1)
-coluna.overwrite(1, g2)
+MS.remove(1)
+MS.overwrite(1, g2)
 
-MP = Coluna(1650, 50)
-for i in range(7):
+MP = Coluna(1650, 30, "MP")
+for i in range(16):
     MP.add(Container("Sprites/Quadro_Label.jpg"))
-for i in range(2):
+for i in range(4):
     MP.array[i].setContent(Grupo(p1.paginas[i], janela))
+
+cpu = Coluna(1250, 30, "CPU")
+cpu.add(Container("Sprites/Cpu_Label.jpg"))
+cpu.array[0].setContent(Grupo(p2, janela))
+
+filaProntos = Coluna(20, 400)
+for i in range(3):
+    filaProntos.add(Grupo(processos[i], janela))
+
+filas = []
+for i in range (7):
+    filas.append(Coluna(10 + i * 165, 500))
+    for j in range(2):
+        filas[i].add(Grupo(processos[i*2 + j], janela))
+
+filas[3].add(Grupo(processos[14], janela))
+filas[3].add(Grupo(processos[15], janela))
+filas[3].add(Grupo(processos[16], janela))
+filas[3].add(Grupo(processos[18], janela))
+filas[3].add(Grupo(processos[19], janela))
+filas[5].add(Grupo(processos[20], janela))
+filas[5].add(Grupo(processos[21], janela))
+
 
 '''
 print("Informe numero de bits da pagina, e numero de bits dos quadros")
@@ -63,16 +92,22 @@ for c in range(3):
 print(t.id, t.registros[6].numQuadro)
 print(f.pronto.fila)'''
 
-
+tfp = 3
+mdpf = 4
 
 while True:
     janela.set_background_color([255, 255, 255])
-    janela.draw_text("MS", 1400, 30, 20)
-    janela.draw_text("MP", 1650, 30, 20)
-    coluna.draw()
+    MS.draw()
     MP.draw()
+    MS.draw_text(janela)
+    MP.draw_text(janela)
+    cpu.draw()
+    cpu.draw_text(janela)
+    for i in filas:
+        i.draw()
+    write(janela, f"Taxa de falta de páginas: {tfp};;Memória desperdiçada por fragmentação: {mdpf}", 40, 40, 20)
     janela.update()
-    #erro(janela, "oops")
+    #erro("oops")
     '''valido = False # Será true quando o comando for válido
     processos = []
     id_processos = 0

@@ -11,7 +11,7 @@ class Container(Sprite):
     
     def draw(self):
         super().draw()
-        self.grupo.set_position(self.x + 20, self.y + 6)
+        self.grupo.set_position(self.x + 15, self.y + 4)
         self.grupo.draw()
     
     def setContent(self, sprite):
@@ -33,13 +33,14 @@ class Grupo(Sprite):
     
      def draw(self):
          super().draw()
-         self.janela.draw_text(self.txt, self.x + 35, self.y + 20, 25, (0, 0, 0), "Comic Sans")
+         self.janela.draw_text(self.txt, self.x + 15, self.y + 8, 25, (0, 0, 0), "Comic Sans")
 
 
 class Reta: # Classe Abstrata
      # Classe que empilha sprites na tela (ou, como deve ser usada na maior parte das vezes, empilha Grupos)
      
-     def __init__(self, x, y) -> None:
+     def __init__(self, x, y, title="") -> None:
+        self.title = title
         self.array = []
         self.x = x
         self.y = y
@@ -47,6 +48,9 @@ class Reta: # Classe Abstrata
      def draw(self):
         for s in self.array:
             s.draw()
+     
+     def draw_text(self, janela):
+         pass
     
      def add(self, sprite):
         # adiciona um sprite no fim da reta
@@ -87,6 +91,9 @@ class Reta: # Classe Abstrata
 
 class Coluna(Reta):
 
+    def draw_text(self, janela):
+         janela.draw_text(self.title, self.x, self.y - 20, 20, (0,0,0))
+
     def add(self, sprite):
         if self.array == []:
             sprite.set_position(self.x, self.y)
@@ -114,6 +121,9 @@ class Coluna(Reta):
              
 
 class Linha(Reta):
+
+    def draw_text(self, janela):
+         janela.draw_text(self.title, self.x - 20, self.y, 20, (0,0,0))
 
     def add(self, sprite):
         if self.array == []:
