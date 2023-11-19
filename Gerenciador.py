@@ -15,6 +15,7 @@ class Gerenciador:
     #   Construtor
     #
     #   Inicializa o gerenciador explicitando os tamanhos dos vários componentes da memória
+    #   Todos os métodos de classes internas retornam mensagens 
     #   Tamanhos são recebidos no formato log2(tamanho desejado) por padrão
     #   n_residente_inicial se refere ao tamanho do conjunto residente alocado na criação de um processo
     #   que passa pela transição (novo, pronto)
@@ -36,8 +37,9 @@ class Gerenciador:
         self.MS = MemoriaSecundaria(bits_ms)
         self.TP = []
 
-        #self.tabela_de_processos = [] Isso é válido?
+        self.executando = None
 
+        self.tabela_de_processos = []
         self.fila_de_processos = FilaDeProcessos()
 
 
@@ -47,25 +49,18 @@ class Gerenciador:
         p = Processo(size, self.MP.tam_quadro, pid)
         self.fila_de_processos.novo.adicionar(p)
 
-    #   Método responsável por carregar a imagem de um processo novo para a MP
+    #   Método responsável por carregar a imagem de um processo sem nenhuma página na MP para a mesma
     #   O número de quadros carregados é decidido por uma configuração
-    # def carrega_imagem(self, pid):
-
-    #     tabela = None
-
-    #     for i in range(len(self.TP)):
-    #         if self.TP[i].id == pid:
-    #             tabela = self.TP[i]
-
-    #     for i in range(self.n_resident):
-
-    #         self.MP.add_LRU(tabela.registros[i])
-    #         tabela.registros[i].p = True
+    def carrega_imagem(self, processo):
+            
+            pass
     
+    def add_LRU(self, processo):
+        pass
 
     #   Método utilizado para marcar a passagem do tempo dentro do sistema
     #   Necessário para a implementação da política LRU de substituição de páginas
-    #   e para a chamda do swapper
+    #   e para a chamada do swapper
     def atualizaClock(self):
 
         self.clock += 1

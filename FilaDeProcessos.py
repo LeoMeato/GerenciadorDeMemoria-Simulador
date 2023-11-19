@@ -1,3 +1,5 @@
+from Interface_funções import *
+
 #   O arquivo contém as classes responsáveis por gerenciar
 #   os processos em suas respectivas filas, considerando o
 #   diagrama de 7 estados
@@ -11,12 +13,27 @@ class FilaDeProcessos:
 
         self.novo = Fila()
         self.pronto = Fila()
-        self.bloqueado = Fila()
+        self.bloqueado_page_fault = Fila()
+        self.bloqueado_IO = Fila()
         self.sus_pronto = Fila()
         self.sus_bloqueado = Fila()
 
-    def transita(pid, fila1, fila2):
-        pass
+        self.filas = {
+            "novo": self.novo,
+            "pronto": self.pronto,
+            "bloqueado_page_fault": self.bloqueado_page_fault,
+            "bloqueado_IO": self.bloqueado_IO,
+            "sus_pronto": self.sus_pronto,
+            "sus_bloqueado": self.sus_bloqueado
+        }
+
+    def transita(self, pid, fila1, fila2):
+
+        if (fila1 == "sus_pronto" and fila2 == "sus_bloqueado"):
+            erro("Transição (" + fila1 + "," + fila2 + ") não faz sentido")
+
+        processo = self.filas[fila1].remove_pid(pid)
+        self.filas[fila2].adicionar(processo)
 
 
 class Fila:
@@ -31,3 +48,12 @@ class Fila:
         processo = self.fila[0]
         self.fila.pop(0)
         return processo
+    
+    def remove_pid(self, pid):
+
+        for i in self.fila:
+
+            p = i
+            if (p.pcb.id == pid):
+                self.fila.remove(p)
+                return p
