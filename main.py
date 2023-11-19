@@ -88,11 +88,11 @@ for i in range(40):
 for i in range(tam_mp):
     mp.add(Container("Sprites/Quadro_Label.jpg"))
 
-nomesDasFilas = ("Novo", "Pronto", "Bloq. Page Fault", "Bloq. por E/S", "Pronto-Suspenso", "Bloq.-Suspenso", "???")
+nomesDasFilas = ("Novo", "Pronto", "Bloq. Page Fault", "Bloq. por E/S", "Pronto-Suspenso", "Bloq.-Suspenso")
 filas = []
-for i in range (7):
-    filas.append(Coluna(10 + i * 165, 500, nomesDasFilas[i]))
-    '''for j in range(2):
+for i in range (6):
+    filas.append(Coluna(20 + i * 170, 500, nomesDasFilas[i]))
+    for j in range(2):
         filas[i].add(Grupo(processos[i*2 + j], janela))
 
 filas[3].add(Grupo(processos[14], janela))
@@ -101,7 +101,7 @@ filas[3].add(Grupo(processos[16], janela))
 filas[3].add(Grupo(processos[18], janela))
 filas[3].add(Grupo(processos[19], janela))
 filas[5].add(Grupo(processos[20], janela))
-filas[5].add(Grupo(processos[21], janela))'''
+filas[5].add(Grupo(processos[21], janela))
 
 
 '''
