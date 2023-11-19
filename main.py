@@ -6,11 +6,13 @@ from Quadro import *
 from FilaDeProcessos import *
 from Interface_classes import *
 from input import *
+from Pagina import Agrupamento
 
 janela = Window(1920, 1080)
 janela.set_title("Gerenciador de Memória")
 Mouse = janela.get_mouse()
 teclado = janela.get_keyboard()
+pressed = False
 
 global tam_mp
 global tfp
@@ -24,9 +26,9 @@ tam_mp = 16
 tfp = 0
 mdpf = 0
 
-ms = Coluna(1475, 30, "MS")
-mp = Coluna(1650, 30, "MP")
-cpu = Coluna(1250, 30, "CPU");cpu.add(Container("Sprites/Cpu_Label.jpg"))
+ms = Coluna(1475, 50, "MS")
+mp = Coluna(1650, 50, "MP")
+cpu = Coluna(1250, 50, "CPU");cpu.add(Container("Sprites/Cpu_Label.jpg"))
 
 '''
 #Leitura de Arquivo
@@ -103,6 +105,14 @@ filas[3].add(Grupo(processos[19], janela))
 filas[5].add(Grupo(processos[20], janela))
 filas[5].add(Grupo(processos[21], janela))
 
+messageBox = MessageBox(12, 600, 30, janela)
+for i in range(12):
+    messageBox.newMessage("Houve algo.")
+messageBox.newMessage("De fato, houve algo.")
+
+pauseButton = Sprite("Sprites/Botao_Pausa.png")
+pauseButton.set_position(1275, 200)
+
 
 '''
 print("Informe numero de bits da pagina, e numero de bits dos quadros")
@@ -125,15 +135,30 @@ print(f.pronto.fila)'''
 
 while True:
     janela.set_background_color([255, 255, 255])
+    messageBox.draw()
     ms.draw()
     mp.draw()
     ms.draw_text(janela)
     mp.draw_text(janela)
     cpu.draw()
     cpu.draw_text(janela)
+    pauseButton.draw()
     for i in filas:
         i.draw()
         i.draw_text(janela)
-    write(janela, f"Taxa de falta de páginas: {tfp};;Memória desperdiçada por fragmentação: {mdpf}", 40, 40, 20)
+    write(janela, f"Taxa de falta de páginas: {tfp};;Memória desperdiçada por fragmentação: {mdpf}", 50, 50, 20)
+
+    if not pressed and Mouse.is_button_pressed(1):
+        print("uepa")
+        pressed = True
+        if Mouse.is_over_area((pauseButton.x, pauseButton.y), (pauseButton.x + pauseButton.width, pauseButton.y + pauseButton.height)):
+            print ("rapaaaiz")
+
+    if not Mouse.is_button_pressed(1):
+        pressed = False
+    
+    
+
+
     janela.update()
     #erro("oops")

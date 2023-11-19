@@ -4,6 +4,7 @@ from Processo import *
 from Pagina import *
 
 class Container(Sprite):
+    # Classe que possui um sprite maior e um Grupo menor, o maior funcionando como um contêiner para o Grupo
 
     def __init__(self, image_file, frames=1):
         super().__init__(image_file, frames)
@@ -22,18 +23,32 @@ class Container(Sprite):
 
 class Grupo(Sprite):
      
-     # Classe que estende Sprite e tem como função reunir um sprite de label e seu conteúdo (texto),
+     # Classe que herda de Sprite e tem como função reunir um sprite de label e seu conteúdo (texto),
      # bem como acoplar seus desenhos na tela.
 
-     def __init__(self, agrupamento, janela, frames=1):
-         
+     def __init__(self, agrupamento, janela, ratio=11,frames=1):
+         self.ratio = ratio
          super().__init__(agrupamento.label, frames)
          self.txt = agrupamento.content
          self.janela = janela
     
      def draw(self):
          super().draw()
-         self.janela.draw_text(self.txt, self.x + 15, self.y + 8, 25, (0, 0, 0), "Comic Sans")
+         self.janela.draw_text(self.txt, self.x + self.width/self.ratio, self.y + self.height/self.ratio, 25, (0, 0, 0), "Comic Sans")
+
+class MessageBox:
+    def __init__(self, tam, x, y, janela) -> None:
+        self.coluna = Coluna(x, y)
+        self.janela = janela
+        for i in range(tam):
+            self.coluna.add(Grupo(Agrupamento("Sprites/Caixa_De_Acao.jpg", ""), self.janela, 60))
+        
+    def draw(self):
+        self.coluna.draw()
+    
+    def newMessage(self, msg):
+        self.coluna.pop(0)
+        self.coluna.add(Grupo(Agrupamento("Sprites/Caixa_De_Acao.jpg", msg), self.janela, 60))
 
 
 class Reta: # Classe Abstrata
@@ -92,7 +107,7 @@ class Reta: # Classe Abstrata
 class Coluna(Reta):
 
     def draw_text(self, janela):
-         janela.draw_text(self.title, self.x, self.y - 20, 20, (0,0,0))
+         janela.draw_text(self.title, self.x, self.y - 30, 20, (0,0,0))
 
     def add(self, sprite):
         if self.array == []:
@@ -123,7 +138,7 @@ class Coluna(Reta):
 class Linha(Reta):
 
     def draw_text(self, janela):
-         janela.draw_text(self.title, self.x - 20, self.y, 20, (0,0,0))
+         janela.draw_text(self.title, self.x - 30, self.y, 20, (0,0,0))
 
     def add(self, sprite):
         if self.array == []:
