@@ -23,8 +23,8 @@ class Processo(Agrupavel):
         #IMPORTANTE: Lembra de revisar essa palhaçada Arthur
         for i in range(tam//tam_quadro):
 
-            self.paginas.append(Pagina(tam_quadro))
-        self.paginas.append(Pagina(tam % tam_quadro))
+            self.paginas.append(Pagina(tam_quadro, self.id, i))
+        self.paginas.append(Pagina(tam % tam_quadro, self.id, 1))
 
         self.pcb = Pcb(id, tam)
 

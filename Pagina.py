@@ -5,11 +5,13 @@ class Agrupavel:
 class Pagina(Agrupavel):
 
     label = "Sprites/Pagina_Label.jpg"
-    content = "Página X"
+    content = ""
 
     #deve haver um metodo que entregue uma copia dela mesma
-    def __init__(self, tam) -> None:
+    def __init__(self, tam, id, num) -> None:
 
-        # A página não precisa conhecer o id do próprio processo, certo? -Arthur
+        self.id = id
+        self.num = num
+        self.content = f"Página {num} P{id}"
         self.tam = tam
         self.conteudo = []

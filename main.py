@@ -6,12 +6,12 @@ from Quadro import *
 from FilaDeProcessos import *
 from Interface_classes import *
 
-janela = Window(1280, 720)
+janela = Window(1920, 1080)
 janela.set_title("Gerenciador de Memória")
 Mouse = janela.get_mouse()
 teclado = janela.get_keyboard()
 
-coluna = Coluna(50, 50)
+coluna = Coluna(1400, 50)
 
 '''for i in range(10):
     coluna.add(Sprite("Sprites/Pagina_Label.jpg"))
@@ -36,22 +36,15 @@ coluna.add(g2)
 coluna.add(g3)
 coluna.add(g4)
 
-coluna.add(Grupo(Pagina(10), janela))
-
 coluna.remove(1)
 coluna.overwrite(1, g2)
 
-g5 = Grupo(Processo(4, 4, 4), janela)
-c1 = Container("Sprites/Quadro_Label.jpg")
-coluna.add(c1)
-
-c1.setContent(g5)
-
-MP = Coluna(400, 20)
+MP = Coluna(1650, 50)
 for i in range(7):
     MP.add(Container("Sprites/Quadro_Label.jpg"))
+for i in range(2):
+    MP.array[i].setContent(Grupo(p1.paginas[i], janela))
 
-MP.array[4].setContent(g5)    
 '''
 print("Informe numero de bits da pagina, e numero de bits dos quadros")
 tam_pag, tam_qua = input().split()
@@ -74,10 +67,12 @@ print(f.pronto.fila)'''
 
 while True:
     janela.set_background_color([255, 255, 255])
+    janela.draw_text("MS", 1400, 30, 20)
+    janela.draw_text("MP", 1650, 30, 20)
     coluna.draw()
     MP.draw()
     janela.update()
-    erro(janela, "oops")
+    #erro(janela, "oops")
     '''valido = False # Será true quando o comando for válido
     processos = []
     id_processos = 0

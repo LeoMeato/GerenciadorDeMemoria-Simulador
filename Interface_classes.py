@@ -33,7 +33,7 @@ class Grupo(Sprite):
     
      def draw(self):
          super().draw()
-         self.janela.draw_text(self.txt, self.x + 40, self.y + 25, 25, (0, 0, 0), "Candara")
+         self.janela.draw_text(self.txt, self.x + 35, self.y + 20, 25, (0, 0, 0), "Comic Sans")
 
 
 class Reta: # Classe Abstrata
@@ -95,7 +95,10 @@ class Coluna(Reta):
             sprite.set_position(var.x, var.y + var.height)
         self.array.append(sprite)
 
-    def pop(self, pos):
+    def pop(self, pos = -1):
+         
+         if pos == -1:
+             pos = len(self.array) - 1
          
          y = self.array[pos].height
          self.array.pop(pos)
@@ -120,7 +123,10 @@ class Linha(Reta):
             sprite.set_position(var.x + var.width, var.y)
         self.array.append(sprite)
     
-    def pop(self, pos):
+    def pop(self, pos = -1):
+         
+         if pos == -1:
+            pos = len(self.array) - 1
          
          x = self.array[pos].width
          self.array.pop(pos)
