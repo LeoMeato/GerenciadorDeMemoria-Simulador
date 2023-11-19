@@ -5,13 +5,54 @@ from MemoriaPrincipal import *
 from Quadro import *
 from FilaDeProcessos import *
 from Interface_classes import *
+from input import *
 
 janela = Window(1920, 1080)
 janela.set_title("Gerenciador de Memória")
 Mouse = janela.get_mouse()
 teclado = janela.get_keyboard()
 
+#Leitura de Arquivo
+arquivo = open("nome_arq", 'r')
+instrucoes = arquivo.readlines()
+arquivo.close
+"""
+processos = []
+id_processos = 0
+for i in range(len(instrucoes)):
+    instrucoes[i][0] = binario_decimal(instrucoes[i][0]) # Transforma binario em decimal
+    if instrucoes[i][1] == 'P': # instrução a ser executada pela CPU
+        valido = True
+    elif instrucoes[i][1] == 'I': # instrução de I/O
+        valido = True
 
+    elif instrucoes[i][1] == 'C': # criação (submissão de um processo)
+        valido = True
+        num_processo = instrucoes[i][0]
+        tam_processo = instrucoes[i][2]
+        if len(instrucoes[i]) > 3:
+            unidade = instrucoes[i][3]
+            if unidade == "KB":
+                tam_processo = int(tam_processo) * 210
+            elif unidade == "MB":
+                tam_processo = int(tam_processo) * 220
+            elif unidade == "GB":
+                tam_processo = int(tam_processo) * 2**30
+        processos.append(Grupo(Processo(tam_processo, id_processos), janela))
+        coluna.add(processos[len(processos)-1])
+        id_processos += 1
+
+    elif instrucoes[i][1] == 'R': # pedido de leitura em um endereço lógico
+        valido = True
+
+    elif instrucoes[i][1] == 'W': # pedido de escrita em um endereço lógico de um dado valor
+        valido = True
+
+    elif instrucoes[i][1] == 'T': # terminação de processo
+        valido = True
+    else:
+        print("Instrução inválido")
+"""
 
 '''for i in range(10):
     coluna.add(Sprite("Sprites/Pagina_Label.jpg"))
@@ -108,44 +149,3 @@ while True:
     write(janela, f"Taxa de falta de páginas: {tfp};;Memória desperdiçada por fragmentação: {mdpf}", 40, 40, 20)
     janela.update()
     #erro("oops")
-    '''valido = False # Será true quando o comando for válido
-    processos = []
-    id_processos = 0
-    while (valido == False):
-        comando = input().split() # array dos inputs
-        print(comando)
-
-        if comando[1] == 'P': # instrução a ser executada pela CPU
-            valido = True
-
-        elif comando[1] == 'I': # instrução de I/O
-            valido = True
-
-        elif comando[1] == 'C': # criação (submissão de um processo)
-            valido = True
-            num_processo = comando[0]
-            tam_processo = comando[2]
-            if len(comando) > 3:
-                unidade = comando[3]
-                if unidade == "KB":
-                    tam_processo = int(tam_processo) * 2**10
-                elif unidade == "MB":
-                    tam_processo = int(tam_processo) * 2**20
-                elif unidade == "GB":
-                    tam_processo = int(tam_processo) * 2**30
-            processos.append(Grupo(Processo(tam_processo, id_processos), janela))
-            coluna.add(processos[len(processos)-1])
-            id_processos += 1
-
-        elif comando[1] == 'R': # pedido de leitura em um endereço lógico
-            valido = True
-
-        elif comando[1] == 'W': # pedido de escrita em um endereço lógico de um dado valor
-            valido = True
-
-        elif comando[1] == 'T': # terminação de processo
-            valido = True
-
-        else:
-            print("Comando inválido")
-'''
