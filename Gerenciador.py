@@ -69,7 +69,7 @@ class Gerenciador:
     def atualizaClock(self):
 
         self.clock += 1
-        self.MP.atualizaClock()
+        self.MP.atualiza_clock_quadros()
     
 
     #   Método utilizado para suspender um processo, que será escolhido pelo swapper

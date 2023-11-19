@@ -3,19 +3,18 @@ from Swapper import *
 from TabelaDePaginas import *
 
 class MemoriaPrincipal:
-    quadros = []           #Quadros disponiveis e usados em MP
-    tabelas_de_paginas = [] #Tabela de Paginas mantida
-    
     
     def __init__(self, bits_size, bits_log):
         if bits_size < bits_log:
-            bits_log = bits_size#Evita o caso de o tamanho de enderecos do quadro for maior que o tamanho da MP, sendo assim, o quadro pode ser no maximo igual a MP
+            bits_log = bits_size
+            #Evita o caso de o tamanho de enderecos do quadro for maior que o tamanho da MP, sendo assim, o quadro pode ser no maximo igual a MP
 
         self.bits_log= bits_log
         self.bits_size = bits_size
         self.tam_quadro = 2**bits_log
+        self.quadros = []
 
-        self.quadros = self.constroi_memoria()
+        self.constroi_memoria()
 
     #bits_size = n (Tamanho total da memoria)
     # bits_log = m (Tamanho do quadro) 
@@ -24,23 +23,23 @@ class MemoriaPrincipal:
             self.quadros.append(Quadro())#Setando o tempo de ultimo acesso como 0
 
 
+
+    #Consultas de paginas, alocacao e remocao
     def retira_pagina(self, index_quadro):#recebo do swapper a pagina calculada a ser retirada
-        self.quadros[index_quadro] = None
+        self.quadros[index_quadro].desaloca_pagina()
 
     def aloca_pagina(self, index_quadro, pagina):
-        self.quadros[index_quadro] = pagina#E guardado a pagina trazida da memoria
+        self.quadros[index_quadro].aloca_pagina(pagina)
 
-    def consulta_pagina(self, index_quadro):#Obtem a pagina para swapper analisar, ou para devida manipulacao como swapp-in
-        return self.quadros[index_quadro].consulta_quadro()#Retorna None se o quadro estiver vazio
+    def consulta_pagina(self, index_quadro):
+        return self.quadros[index_quadro].consulta_quadro() #Retorna a pagina requisitada, e ja zera o last_update
     
-    def consulta_tabela(self, index_tabela, pagina):
-        return self.tabelas_de_paginas[index_tabela] #Retorno a tabela de paginas para consultar qual quadro esta a pagina
+
+
+    #Verificacao de presenca e atualizacao para a LRU
+    def consulta_quadro_disponivel(self, index_quadro):
+        return self.quadros[index_quadro].consulta_disponivel() #Retorna False se o quadro estiver vazio
     
-        ################################Vai mudar aqui, no caso consultar tp, depois verificar a pagina################################
-        #index_quadro = self.tabelas_de_paginas[index_tabela].consulta_quadro(pagina)
-        #if index_quadro == None:
-        #   return index_quadro
-        #return self.consulta_pagina(index_quadro)
-    
-    def tamanho_do_quadro(self):
-        return 2**self.bits_log#Numero de enderecos disponiveis no quadro
+    def atualiza_clock_quadros(self):
+        for i in self.quadros:
+            i.atualiza_clock()
