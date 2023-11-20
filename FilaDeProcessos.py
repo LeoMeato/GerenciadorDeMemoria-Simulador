@@ -34,7 +34,10 @@ class FilaDeProcessos:
 
         processo = self.filas[fila1].remove_pid(pid)
         self.filas[fila2].adicionar(processo)
-
+    
+    def purge(self, pid):
+        for f in self.filas.values():
+            f.remove_pid(pid)
 
 class Fila:
 
