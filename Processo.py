@@ -1,21 +1,17 @@
-from Pagina import Pagina, Agrupamento
+from Pagina import *
 from TabelaDePaginas import *
 #from collections import deque
 
-#   Classe: Processo
-#
 #   Responsável por representar os processos recebidos de um escalonador imaginário
 class Processo(Agrupamento):
 
     label = "Sprites/Processo_Label.jpg"
     content = ""
 
-    #   Construtor
-    #
     #   Fugindo do padrão, aqui os tamanhos são esperados como decimais para facilitar a coelta de informações do gerenciador
     def __init__(self, tam, tam_quadro, id) -> None:
 
-        self.id = id
+        self.id = id #id é redundado por limitações da interface, mas não é necessário para a lógica
         self.content = "Processo {}".format(id)
 
         self.paginas = []
@@ -24,7 +20,7 @@ class Processo(Agrupamento):
         for i in range(tam//tam_quadro):
 
             self.paginas.append(Pagina(tam_quadro, self.id, i))
-        self.paginas.append(Pagina(tam % tam_quadro, self.id, 1))
+        self.paginas.append(Pagina(tam % tam_quadro, self.id, tam//tam_quadro))
 
         self.pcb = Pcb(id, tam)
 
