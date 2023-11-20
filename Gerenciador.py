@@ -1,6 +1,6 @@
 #   O arquivo contém a classe responsável pelo gerenciamento
 #   da memória do sistema e dos componentes associados
-
+from math import *
 from Swapper import *
 from Processo import *
 from FilaDeProcessos import *
@@ -15,22 +15,25 @@ class Gerenciador:
     #   Construtor
     #
     #   Inicializa o gerenciador explicitando os tamanhos dos vários componentes da memória
-    #   Todos os métodos de classes internas retornam mensagens 
+    #   Todos os métodos de classes internas retornam mensagens para serem empilhadas e exibidas lentamente pela
+    #   interface, indicando com mais detalhes as ações feitas pelo sistema
     #   Tamanhos são recebidos no formato log2(tamanho desejado) por padrão
     #   n_residente_inicial se refere ao tamanho do conjunto residente alocado na criação de um processo
     #   que passa pela transição (novo, pronto)
-    def __init__(self, bits_mp, bits_ms, bits_log, n_residente, arq_entrada):
+    def __init__(self, bits_mp, bits_ms, bits_frame, bits_log, n_residente, arq_entrada):
         
         #   A variável clock é usada como indicação de tempo para a implementação de políticas
         #   do gerenciador e coleta de dados de execução
         self.clock = 0
+        self.page_faults = 0
+        self.mem_waste = 0
 
         self.bits_mp = bits_mp
         self.bits_ms = bits_ms
         self.bits_log = bits_log
-
         self.n_resident = n_residente
 
+        self.frame_size = 2**bits_frame
         self.arq_entrada = arq_entrada
 
         self.MP = MemoriaPrincipal(bits_mp, bits_log)
@@ -38,6 +41,7 @@ class Gerenciador:
         self.TP = []
 
         self.executando = None
+        self.emIO = None
 
         self.tabela_de_processos = []
         self.fila_de_processos = FilaDeProcessos()
@@ -46,8 +50,17 @@ class Gerenciador:
     #   Método responsável por alocar as estruturas necessárias para administrar um novo processo
     def cria_processo(self, pid, size):
 
-        p = Processo(size, self.MP.tam_quadro, pid)
+
+        p = Processo(size, self.frame_size, pid)
         self.fila_de_processos.novo.adicionar(p)
+
+        n_paginas = ceil(size/self.frame_size)
+        tp = TabelaDePaginas(pid, n_paginas)
+        self.TP.append(tp)
+
+        self.tabela_de_processos.append(p)
+
+
 
     #   Método responsável por carregar a imagem de um processo sem nenhuma página na MP para a mesma
     #   O número de quadros carregados é decidido por uma configuração
@@ -55,7 +68,9 @@ class Gerenciador:
             
             pass
     
-    def add_LRU(self, processo):
+
+    #   Método implementa a polítical de substituição de páginas do sistema
+    def add_LRU(self, pagina):
         pass
 
     #   Método utilizado para marcar a passagem do tempo dentro do sistema
@@ -78,17 +93,10 @@ class Gerenciador:
         
         pass
 
-    #   Método utilizado para indicar um erro fatal para a execução do programa
-    #   Chamado em situações absurdas como a submissão de um processo com tamanho maior
-    #   que o endereço lógico, falta de espaço para swap, acesso à um endereço inválido, etc
-    def erro_fatal(msg):
-
-        pass
-
     #   Os métodos a seguir representam requisições básicas feitas por processos
     #   Comumente resultam em faltas de páginas, visto que acessam a MP
     #   Recebem as identificações dos processos e endereços lógicos (quando aplicável)
-    def adquireCPU(self, pid, end):
+    def CPUinstruction(self, pid, end):
 
         pass
     
@@ -102,14 +110,16 @@ class Gerenciador:
 
         pass
 
-    def leituraMP(self, pid, end):
+    def MPread(self, p, end):
 
         pass
 
-    def escritaMP(self, pid, end):
+    def MPwrite(self, p, end):
 
         pass
 
     #   Método utilizado para desalocar as estruturas associadas a um processo após o seu fim
-    def terminateProcess(self, pid):
+    def terminateProcess(self, p):
+
+
         pass
