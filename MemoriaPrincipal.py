@@ -4,22 +4,22 @@ from TabelaDePaginas import *
 
 class MemoriaPrincipal:
     
-    def __init__(self, bits_size, bits_log):
-        if bits_size < bits_log:
-            bits_log = bits_size
+    def __init__(self, bits_size, bits_frame):
+        if bits_size < bits_frame:
+            bits_frame = bits_size
             #Evita o caso de o tamanho de enderecos do quadro for maior que o tamanho da MP, sendo assim, o quadro pode ser no maximo igual a MP
 
-        self.bits_log= bits_log
+        self.bits_frame = bits_frame
         self.bits_size = bits_size
-        self.tam_quadro = 2**bits_log
+        self.tam_quadro = 2**bits_frame
         self.quadros = []
 
         self.constroi_memoria()
 
     #bits_size = n (Tamanho total da memoria)
-    # bits_log = m (Tamanho do quadro) 
+    # bits_frame = m (Tamanho do quadro) 
     def constroi_memoria(self):#Inicializacao da paginacao da memoria
-        for i in range(int((2**self.bits_size)/(2**self.bits_log))):
+        for i in range(int((2**self.bits_size)/(2**self.bits_frame))):
             self.quadros.append(Quadro())#Setando o tempo de ultimo acesso como 0
 
 
