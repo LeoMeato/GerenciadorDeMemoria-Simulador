@@ -7,10 +7,10 @@ class TabelaDePaginas:
 
 
     #Consulta, alocacao e desalocacao
-    def consulta_entrada(self, pagina):
-        if self.registros[pagina].p == False:
+    def consulta_entrada(self, numRegistro):
+        if self.registros[numRegistro].p == False:
             return False
-        return self.registros[pagina].numQuadro
+        return self.registros[numRegistro].numQuadro
     
     def aloca_entrada(self, numRegistro, numQuadro):
         self.registros[numRegistro].aloca_registro(numQuadro)
