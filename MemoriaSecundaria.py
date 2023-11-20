@@ -1,8 +1,9 @@
+from Interface_funções import *
 #   O arquivo contém todas as classes e métodos necessários para a 
 #   manipulação da representação escolhida para memória secundária
  
 #   Representa a parte disponível para swap em um sistema que implementa memória virtual
-#   Deve ser inicializada pelo gerenciador geral e manipulada apenas pelo swapper
+#   Deve ser inicializada pelo gerenciador geral e manipulada apenas por ele e o swapper
 class MemoriaSecundaria:
     
     #   O valor bits_size é esperado na forma log2(tamamho desejado), como no resto do sistema
@@ -12,46 +13,50 @@ class MemoriaSecundaria:
         self.images = []
 
 
-    #   Procedimento realizado na inserção de uma página qualquer na MS
-    #   Explode o programa em caso de falha
-    def swap_out(self, idProcesso, numPagina, pagina) -> bool:
+    #   Procedimento realizado na criação de um novo processo
+    #   Adiciona sua imagem na memória secundária e explode se
+    #   não houver mais espaço
+    def load_image(self, processo):
 
-        if (pagina.size > self.free_space):
+        if (processo in self.images): 
+            erro("Processo duplicado na MS :(;O arquivo de entrada está correto?")
 
-            #print("Falta de memória secundária")
-            return False
+        if (self.free_space < processo.pbc.tam):
+            erro("MS explodiu :(; Espaço de swap excedido")
+
+        self.images.append(processo)
+        self.free_space -= processo.pcb.tam
+
+
+    #   Procedimento chamado no término de um processo
+    #   Libera espaço de swap para as próximas execuções
+    def remove_image(self, processo):
+
+        if (not processo in self.images):
+            erro("Processo " + processo.pcb.pi + " não pôde ser retirado da MS :(;Verifique a lógica do gerenciador;O arquivo de entrada está correto?")
+
+        self.images.remove(processo)
+        self.free_space += processo.pcb.tam
+
+
+    #   Procedimento realizado no swap out de uma página da MP para MS
+    #   Chamado quando a página foi alterada para preservar a consistência das informações
+    def swap_out(self, pid, numPagina, pagina) -> bool:
         
-        self.free_space += pagina.size
-        self.registros.append(RegistroMS(idProcesso, numPagina, pagina))
-        return True
+        p = None
+        for i in self.images:
+            if (i.pcb.id == pid):
+                p = i
+                break
+        
+        p.paginas[numPagina] = pagina
 
 
     #   Procedimento realizado no swap in de uma página para a MP
-    #   Retorna uma cópia da página e libera o espaço adequado na MS em um fluxo normal
-    #   Retorna falha caso as informações recebidas não façam sentido
-    def swap_in(self, idProcesso, numPagina):
+    #   Retorna uma cópia da página solicitada
+    def swap_in(self, pid, numPagina):
 
-        for i in range(len(self.registros)):
-            
-            r = self.registros[i]
-
-            if (r.idProcesso == idProcesso and r.numPagina == numPagina):
-
-                pagina = r.copy()
-
-                self.free_space += pagina.size
-                self.registros.pop(i)
-                return pagina
-
-        return False
+        for p in self.images:
+            if (p.pcb.id == pid):
+                return p.paginas[numPagina]
     
-
-#   Garante a organização das páginas armazenadas por swap out
-#   Não deve existir fora da classe MS
-class RegistroMS:
-
-    def __init__(self, pid, numPagina, pagina):
-
-        self.pid = pid
-        self.numPagina = numPagina
-        self.pagina = pagina
