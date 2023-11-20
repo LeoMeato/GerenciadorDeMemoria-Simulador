@@ -5,7 +5,7 @@ from MemoriaPrincipal import *
 from Quadro import *
 from FilaDeProcessos import *
 from Interface_classes import *
-from input import *
+from utilidades import *
 from Pagina import Agrupamento
 
 janela = Window(1920, 1080)
