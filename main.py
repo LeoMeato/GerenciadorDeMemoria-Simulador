@@ -29,6 +29,7 @@ mdpf = 0
 ms = Coluna(1475, 50, "MS")
 mp = Coluna(1650, 50, "MP")
 cpu = Coluna(1250, 50, "CPU");cpu.add(Container("Sprites/Cpu_Label.jpg"))
+dma = Coluna(1250, 180, "DMA"); dma.add(Container("Sprites/Dma_Label.jpg"))
 
 '''
 #Leitura de Arquivo
@@ -73,16 +74,6 @@ for i in range(len(instrucoes)):
         print("Instrução inválido")
 """
 
-'''for i in range(10):
-    coluna.add(Sprite("Sprites/Pagina_Label.jpg"))
-
-coluna.pop(5)
-
-coluna.absoluteMove(20, 20)
-coluna.relativeMove(10, 10)'''
-
-
-
 processos = []
 for i in range(40):
     processos.append(Processo(20, 2, i))
@@ -111,7 +102,7 @@ for i in range(12):
 messageBox.newMessage("De fato, houve algo.")
 
 pauseButton = Sprite("Sprites/Botao_Pausa.png")
-pauseButton.set_position(1275, 200)
+pauseButton.set_position(1275, 300)
 
 
 '''
@@ -130,8 +121,7 @@ for c in range(3):
     f.pronto.remover()
 
 print(t.id, t.registros[6].numQuadro)
-print(f.pronto.fila)'''
-
+print(f.pronto.fila)'''             #mo tempão que isso tá aqui comentado. sejá lá quem tiver escrito, pode apagar?
 
 while True:
     janela.set_background_color([255, 255, 255])
@@ -142,6 +132,8 @@ while True:
     mp.draw_text(janela)
     cpu.draw()
     cpu.draw_text(janela)
+    dma.draw()
+    dma.draw_text(janela)
     pauseButton.draw()
     for i in filas:
         i.draw()

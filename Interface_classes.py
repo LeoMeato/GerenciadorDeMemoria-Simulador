@@ -12,7 +12,7 @@ class Container(Sprite):
     
     def draw(self):
         super().draw()
-        self.grupo.set_position(self.x + 15, self.y + 4)
+        self.grupo.set_position(self.x + 12, self.y + 5)
         self.grupo.draw()
     
     def setContent(self, sprite):
@@ -26,7 +26,7 @@ class Grupo(Sprite):
      # Classe que herda de Sprite e tem como função reunir um sprite de label e seu conteúdo (texto),
      # bem como acoplar seus desenhos na tela.
 
-     def __init__(self, agrupamento, janela, ratio=11,frames=1):
+     def __init__(self, agrupamento, janela, ratio=14,frames=1):
          self.ratio = ratio
          super().__init__(agrupamento.label, frames)
          self.txt = agrupamento.content
@@ -34,7 +34,7 @@ class Grupo(Sprite):
     
      def draw(self):
          super().draw()
-         self.janela.draw_text(self.txt, self.x + self.width/self.ratio, self.y + self.height/self.ratio, 25, (0, 0, 0), "Comic Sans")
+         self.janela.draw_text(self.txt, self.x + self.width/self.ratio, self.y + self.height/self.ratio * 2, 25, (0, 0, 0), "Comic Sans")
 
 class MessageBox:
     def __init__(self, tam, x, y, janela) -> None:
@@ -61,8 +61,8 @@ class Reta: # Classe Abstrata
         self.y = y
     
      def draw(self):
-        for s in self.array:
-            s.draw()
+        for i in range(len(self.array) - 1, -1, -1):
+            self.array[i].draw()
      
      def draw_text(self, janela):
          pass
