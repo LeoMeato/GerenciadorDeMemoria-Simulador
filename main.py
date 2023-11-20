@@ -109,6 +109,7 @@ tp3.setM(2, 1)
 tp3.setAddress(4, "a")
 tp3.setAddress(2, "baoefh")
 tp3.setAddress(6, "ble")
+tp3.setP(1, 1)
 
 '''
 print("Informe numero de bits da pagina, e numero de bits dos quadros")

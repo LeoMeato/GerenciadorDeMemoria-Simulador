@@ -20,10 +20,18 @@ class TabelaDePaginas:
         self.list.append(t)
 
     def modify(self, pos, tuple):
+        # Método para modificar uma entrada da TP, porém menos user-friendly que os métodos set a seguir. Por isso, uso não recomendado.
         t = tuple
         g = Grupo(Agrupamento("Sprites/Tp_Registro.jpg", f"{t[0]}    {t[1]}    {t[2]}"), self.janela)
         self.coluna.overwrite(pos, g)
     
+    def setP(self, pos, value):
+        to = self.list[pos]
+        tn = (value, to[1], to[2])
+        g = Grupo(Agrupamento("Sprites/Tp_Registro.jpg", f"{tn[0]}    {tn[1]}    {tn[2]}"), self.janela)
+        self.coluna.overwrite(pos, g)
+        self.list[pos] = tn
+
     def setM(self, pos, value):
         to = self.list[pos]
         tn = (to[0], value, to[2])
