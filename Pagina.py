@@ -1,8 +1,11 @@
-class Agrupavel:
+class Agrupamento:
     label = ''
     content = ''
+    def __init__(self, label, content) -> None:
+        self.label = label
+        self.content = content
 
-class Pagina(Agrupavel):
+class Pagina(Agrupamento):
 
     label = "Sprites/Pagina_Label.jpg"
     content = ""

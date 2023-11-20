@@ -1,11 +1,11 @@
-from Pagina import Pagina, Agrupavel
+from Pagina import Pagina, Agrupamento
 from TabelaDePaginas import *
 #from collections import deque
 
 #   Classe: Processo
 #
 #   Responsável por representar os processos recebidos de um escalonador imaginário
-class Processo(Agrupavel):
+class Processo(Agrupamento):
 
     label = "Sprites/Processo_Label.jpg"
     content = ""

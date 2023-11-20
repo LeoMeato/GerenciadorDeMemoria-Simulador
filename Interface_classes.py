@@ -4,6 +4,7 @@ from Processo import *
 from Pagina import *
 
 class Container(Sprite):
+    # Classe que possui um sprite maior e um Grupo menor, o maior funcionando como um contêiner para o Grupo
 
     def __init__(self, image_file, frames=1):
         super().__init__(image_file, frames)
@@ -11,7 +12,7 @@ class Container(Sprite):
     
     def draw(self):
         super().draw()
-        self.grupo.set_position(self.x + 20, self.y + 6)
+        self.grupo.set_position(self.x + 12, self.y + 5)
         self.grupo.draw()
     
     def setContent(self, sprite):
@@ -22,31 +23,49 @@ class Container(Sprite):
 
 class Grupo(Sprite):
      
-     # Classe que estende Sprite e tem como função reunir um sprite de label e seu conteúdo (texto),
+     # Classe que herda de Sprite e tem como função reunir um sprite de label e seu conteúdo (texto),
      # bem como acoplar seus desenhos na tela.
 
-     def __init__(self, agrupamento, janela, frames=1):
-         
+     def __init__(self, agrupamento, janela, ratio=14,frames=1):
+         self.ratio = ratio
          super().__init__(agrupamento.label, frames)
          self.txt = agrupamento.content
          self.janela = janela
     
      def draw(self):
          super().draw()
-         self.janela.draw_text(self.txt, self.x + 35, self.y + 20, 25, (0, 0, 0), "Comic Sans")
+         self.janela.draw_text(self.txt, self.x + self.width/self.ratio, self.y + self.height/self.ratio * 2, 25, (0, 0, 0), "Comic Sans")
+
+class MessageBox:
+    def __init__(self, tam, x, y, janela) -> None:
+        self.coluna = Coluna(x, y)
+        self.janela = janela
+        for i in range(tam):
+            self.coluna.add(Grupo(Agrupamento("Sprites/Caixa_De_Acao.jpg", ""), self.janela, 60))
+        
+    def draw(self):
+        self.coluna.draw()
+    
+    def newMessage(self, msg):
+        self.coluna.pop(0)
+        self.coluna.add(Grupo(Agrupamento("Sprites/Caixa_De_Acao.jpg", msg), self.janela, 60))
 
 
 class Reta: # Classe Abstrata
      # Classe que empilha sprites na tela (ou, como deve ser usada na maior parte das vezes, empilha Grupos)
      
-     def __init__(self, x, y) -> None:
+     def __init__(self, x, y, title="") -> None:
+        self.title = title
         self.array = []
         self.x = x
         self.y = y
     
      def draw(self):
-        for s in self.array:
-            s.draw()
+        for i in range(len(self.array) - 1, -1, -1):
+            self.array[i].draw()
+     
+     def draw_text(self, janela):
+         pass
     
      def add(self, sprite):
         # adiciona um sprite no fim da reta
@@ -87,6 +106,9 @@ class Reta: # Classe Abstrata
 
 class Coluna(Reta):
 
+    def draw_text(self, janela):
+         janela.draw_text(self.title, self.x, self.y - 30, 20, (0,0,0))
+
     def add(self, sprite):
         if self.array == []:
             sprite.set_position(self.x, self.y)
@@ -114,6 +136,9 @@ class Coluna(Reta):
              
 
 class Linha(Reta):
+
+    def draw_text(self, janela):
+         janela.draw_text(self.title, self.x - 30, self.y, 20, (0,0,0))
 
     def add(self, sprite):
         if self.array == []:

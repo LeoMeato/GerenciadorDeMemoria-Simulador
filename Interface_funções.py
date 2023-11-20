@@ -1,6 +1,9 @@
 from PPlay.window import *
 
-def erro(janela, msg):
+global janela
+janela = Window(1920, 1080)
+
+def erro(msg):
     while True:
         janela.set_background_color([0, 0, 255])
         write(janela, f"Houve um erro :(;;{msg}", 35, 25, 20, (255, 255, 255))
