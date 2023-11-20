@@ -3,6 +3,45 @@ from PPlay.sprite import *
 from Processo import *
 from Pagina import *
 
+class TabelaDePaginas:
+
+    def __init__(self, janela, list, title, x=50, y=170) -> None:
+        self.coluna = Coluna(x, y, title)
+        self.janela = janela
+        self.list = list
+        for v in list:
+            g = Grupo(Agrupamento("Sprites/Tp_Registro.jpg", f"{v[0]}    {v[1]}    {v[2]}"), self.janela)
+            self.coluna.add(g)
+
+    def add(self, tuple):
+        t = tuple
+        g = Grupo(Agrupamento("Sprites/Tp_Registro.jpg", f"{t[0]}    {t[1]}    {t[2]}"), self.janela)
+        self.coluna.add(g)
+        self.list.append(t)
+
+    def modify(self, pos, tuple):
+        t = tuple
+        g = Grupo(Agrupamento("Sprites/Tp_Registro.jpg", f"{t[0]}    {t[1]}    {t[2]}"), self.janela)
+        self.coluna.overwrite(pos, g)
+    
+    def setM(self, pos, value):
+        to = self.list[pos]
+        tn = (to[0], value, to[2])
+        g = Grupo(Agrupamento("Sprites/Tp_Registro.jpg", f"{tn[0]}    {tn[1]}    {tn[2]}"), self.janela)
+        self.coluna.overwrite(pos, g)
+        self.list[pos] = tn
+    
+    def setAddress(self, pos, value):
+        to = self.list[pos]
+        tn = (to[0], to[1], value)
+        g = Grupo(Agrupamento("Sprites/Tp_Registro.jpg", f"{tn[0]}    {tn[1]}    {tn[2]}"), self.janela)
+        self.coluna.overwrite(pos, g)
+        self.list[pos] = tn
+
+    def draw(self):
+        self.coluna.draw_text(self.janela)
+        self.coluna.draw()
+
 class Container(Sprite):
     # Classe que possui um sprite maior e um Grupo menor, o maior funcionando como um contêiner para o Grupo
 

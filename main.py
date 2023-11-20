@@ -5,7 +5,7 @@ from MemoriaPrincipal import *
 from Quadro import *
 from FilaDeProcessos import *
 from Interface_classes import *
-from utilidades import *
+from input import *
 from Pagina import Agrupamento
 
 janela = Window(1920, 1080)
@@ -28,8 +28,8 @@ mdpf = 0
 
 ms = Coluna(1475, 50, "MS")
 mp = Coluna(1650, 50, "MP")
-cpu = Container("Sprites/Cpu_Label.jpg", "CPU"); cpu.set_position(1250, 50)
-dma = Container("Sprites/Dma_Label.jpg", "DMA"); dma.set_position(1250, 180)
+cpu = Container("Sprites/Cpu_Label.jpg", "CPU"); cpu.set_position(1250, 500)
+dma = Container("Sprites/Dma_Label.jpg", "DMA"); dma.set_position(1250, 630)
 
 '''
 #Leitura de Arquivo
@@ -84,7 +84,7 @@ for i in range(tam_mp):
 nomesDasFilas = ("Novo", "Pronto", "Bloq. Page Fault", "Bloq. por E/S", "Pronto-Suspenso", "Bloq.-Suspenso")
 filas = []
 for i in range (6):
-    filas.append(Coluna(20 + i * 170, 500, nomesDasFilas[i]))
+    filas.append(Coluna(20 + i * 170, 550, nomesDasFilas[i]))
     '''for j in range(2):
         filas[i].add(Grupo(processos[i*2 + j], janela))
 
@@ -96,10 +96,20 @@ filas[3].add(Grupo(processos[19], janela))
 filas[5].add(Grupo(processos[20], janela))
 filas[5].add(Grupo(processos[21], janela))'''
 
-messageBox = MessageBox(12, 600, 30, janela)
+messageBox = MessageBox(12, 850, 30, janela)
 
 pauseButton = Sprite("Sprites/Botao_Pausa.png")
-pauseButton.set_position(1275, 300)
+pauseButton.set_position(1275, 750)
+
+tp1 = TabelaDePaginas(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 0")
+tp2 = TabelaDePaginas(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 1", 300)
+tp3 = TabelaDePaginas(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 2", 550)
+tp3.add((0, 0, "End yyy"))
+tp3.setAddress(4, "End zzz")
+tp3.setM(2, 1)
+tp3.setAddress(4, "a")
+tp3.setAddress(2, "baoefh")
+tp3.setAddress(6, "ble")
 
 '''
 print("Informe numero de bits da pagina, e numero de bits dos quadros")
@@ -131,6 +141,9 @@ while True:
     dma.draw()
     dma.draw_text(janela)
     pauseButton.draw()
+    tp1.draw()
+    tp2.draw()
+    tp3.draw()
     for i in filas:
         i.draw()
         i.draw_text(janela)
