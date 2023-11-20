@@ -1,12 +1,13 @@
 from Quadro import *
 from Swapper import *
 from TabelaDePaginas import *
+from Interface_funções import *
 
 class MemoriaPrincipal:
     
     def __init__(self, bits_size, bits_frame):
         if bits_size < bits_frame:
-            bits_frame = bits_size
+            erro("Tamanho da memória principal é menor que o de um quadro;O arquivo de entrada está correto?")
             #Evita o caso de o tamanho de enderecos do quadro for maior que o tamanho da MP, sendo assim, o quadro pode ser no maximo igual a MP
 
         self.bits_frame = bits_frame
