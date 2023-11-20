@@ -28,8 +28,8 @@ mdpf = 0
 
 ms = Coluna(1475, 50, "MS")
 mp = Coluna(1650, 50, "MP")
-cpu = Coluna(1250, 50, "CPU");cpu.add(Container("Sprites/Cpu_Label.jpg"))
-dma = Coluna(1250, 180, "DMA"); dma.add(Container("Sprites/Dma_Label.jpg"))
+cpu = Container("Sprites/Cpu_Label.jpg", "CPU"); cpu.set_position(1250, 50)
+dma = Container("Sprites/Dma_Label.jpg", "DMA"); dma.set_position(1250, 180)
 
 '''
 #Leitura de Arquivo
@@ -85,7 +85,7 @@ nomesDasFilas = ("Novo", "Pronto", "Bloq. Page Fault", "Bloq. por E/S", "Pronto-
 filas = []
 for i in range (6):
     filas.append(Coluna(20 + i * 170, 500, nomesDasFilas[i]))
-    for j in range(2):
+    '''for j in range(2):
         filas[i].add(Grupo(processos[i*2 + j], janela))
 
 filas[3].add(Grupo(processos[14], janela))
@@ -94,16 +94,12 @@ filas[3].add(Grupo(processos[16], janela))
 filas[3].add(Grupo(processos[18], janela))
 filas[3].add(Grupo(processos[19], janela))
 filas[5].add(Grupo(processos[20], janela))
-filas[5].add(Grupo(processos[21], janela))
+filas[5].add(Grupo(processos[21], janela))'''
 
 messageBox = MessageBox(12, 600, 30, janela)
-for i in range(12):
-    messageBox.newMessage("Houve algo.")
-messageBox.newMessage("De fato, houve algo.")
 
 pauseButton = Sprite("Sprites/Botao_Pausa.png")
 pauseButton.set_position(1275, 300)
-
 
 '''
 print("Informe numero de bits da pagina, e numero de bits dos quadros")

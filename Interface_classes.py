@@ -6,14 +6,18 @@ from Pagina import *
 class Container(Sprite):
     # Classe que possui um sprite maior e um Grupo menor, o maior funcionando como um contêiner para o Grupo
 
-    def __init__(self, image_file, frames=1):
+    def __init__(self, image_file, title="", frames=1):
         super().__init__(image_file, frames)
+        self.title = title
         self.grupo = Sprite("Sprites/Vazio_Label.png")
     
     def draw(self):
         super().draw()
         self.grupo.set_position(self.x + 12, self.y + 5)
         self.grupo.draw()
+    
+    def draw_text(self, janela):
+         janela.draw_text(self.title, self.x, self.y - 30, 20, (0,0,0))
     
     def setContent(self, sprite):
         self.grupo = sprite
