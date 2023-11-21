@@ -100,16 +100,20 @@ messageBox = MessageBox(12, 850, 30, janela)
 pauseButton = Sprite("Sprites/Botao_Pausa.png")
 pauseButton.set_position(1275, 750)
 
-tp1 = TabelaDePaginas(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 0")
-tp2 = TabelaDePaginas(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 1", 300)
-tp3 = TabelaDePaginas(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 2", 550)
-tp3.add((0, 0, "End yyy"))
-tp3.setAddress(4, "End zzz")
-tp3.setM(2, 1)
-tp3.setAddress(4, "a")
-tp3.setAddress(2, "baoefh")
-tp3.setAddress(6, "ble")
-tp3.setP(1, 1)
+tps = [None]*3
+tps[0] = TabelaDePaginas(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 0")
+tps[1] = TabelaDePaginas(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 1", 300)
+tps[2] = TabelaDePaginas(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 2", 550)
+tps[2].add((0, 0, "End yyy"))
+tps[2].setAddress(4, "End zzz")
+tps[2].setM(2, 1)
+tps[2].setAddress(4, "a")
+tps[2].setAddress(2, "baoefh")
+tps[2].setAddress(6, "ble")
+tps[2].setP(1, 1)
+
+for i in range(7):
+    tps.append(TabelaDePaginas(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], f"TP - Processo {i + 3}", 50 + i*250))
 
 '''
 print("Informe numero de bits da pagina, e numero de bits dos quadros")
@@ -129,34 +133,46 @@ for c in range(3):
 print(t.id, t.registros[6].numQuadro)
 print(f.pronto.fila)'''             #mo tempão que isso tá aqui comentado. sejá lá quem tiver escrito, pode apagar?
 
+page = 1
+
 while True:
     janela.set_background_color([255, 255, 255])
-    messageBox.draw()
-    ms.draw()
-    mp.draw()
-    ms.draw_text(janela)
-    mp.draw_text(janela)
-    cpu.draw()
-    cpu.draw_text(janela)
-    dma.draw()
-    dma.draw_text(janela)
-    pauseButton.draw()
-    tp1.draw()
-    tp2.draw()
-    tp3.draw()
-    for i in filas:
-        i.draw()
-        i.draw_text(janela)
-    write(janela, f"Taxa de falta de páginas: {tfp};;Memória desperdiçada por fragmentação: {mdpf}", 50, 50, 20)
+    if teclado.key_pressed("1"):
+        page = 1
+    elif teclado.key_pressed("2"):
+        page = 2
+    if page == 1:
+        messageBox.draw()
+        ms.draw()
+        mp.draw()
+        ms.draw_text(janela)
+        mp.draw_text(janela)
+        cpu.draw()
+        cpu.draw_text(janela)
+        dma.draw()
+        dma.draw_text(janela)
+        pauseButton.draw()
+        tps[0].draw()
+        tps[1].draw()
+        tps[2].draw()
+        for i in filas:
+            i.draw()
+            i.draw_text(janela)
+        write(janela, f"Taxa de falta de páginas: {tfp};;Memória desperdiçada por fragmentação: {mdpf}", 50, 50, 20)
 
-    if not pressed and Mouse.is_button_pressed(1):
-        print("uepa")
-        pressed = True
-        if Mouse.is_over_area((pauseButton.x, pauseButton.y), (pauseButton.x + pauseButton.width, pauseButton.y + pauseButton.height)):
-            print ("rapaaaiz")
+        if not pressed and Mouse.is_button_pressed(1):
+            print("uepa")
+            pressed = True
+            if Mouse.is_over_area((pauseButton.x, pauseButton.y), (pauseButton.x + pauseButton.width, pauseButton.y + pauseButton.height)):
+                print ("rapaaaiz")
 
-    if not Mouse.is_button_pressed(1):
-        pressed = False
+        if not Mouse.is_button_pressed(1):
+            pressed = False
+    elif page == 2:
+        for i in range(3, len(tps)):
+            tps[i].draw()
+    else:
+        pass
     
     
 
