@@ -16,13 +16,14 @@ pressed = False
 
 global gm
 
-# gm = Gerenciador()
+gm = Gerenciador(6, 8, 2, 5, 4, "blabla.txt")
 
 global podeExecutar
 
 global tam_mp
 global tfp
 global mdpf
+global nfp
 
 global ms
 global mp
@@ -36,6 +37,7 @@ podeExecutar = True
 tam_mp = 16
 tfp = 0
 mdpf = 0
+nfp = 0
 
 ms = Coluna(1475, 50, "MS")
 mp = Coluna(1650, 50, "MP")
@@ -43,6 +45,9 @@ cpu = Container("Sprites/Cpu_Label.jpg", "CPU"); cpu.set_position(1250, 500)
 dma = Container("Sprites/Dma_Label.jpg", "DMA"); dma.set_position(1250, 630)
 
 def atualiza():
+    global tfp
+    global mdpf
+    global nfp
     ms.delete()
     for v in mp.array:
         v.popContent()
@@ -54,9 +59,52 @@ def atualiza():
 
     
     for i, q in enumerate(gm.MP.quadros):
-        mp.array[i].setContent(Grupo(q.pagina, janela))
+        if q.pagina != None:
+            mp.array[i].setContent(Grupo(q.pagina, janela))
     for p in gm.MS.images:
         ms.add(Grupo(p, janela))
+
+    cpu_tmp = gm.executando
+    if cpu_tmp == None:
+        cpu.popContent()
+    else:
+        cpu.setContent(Grupo(cpu_tmp, janela))
+    
+    dma_tmp = gm.emIO
+    if dma_tmp == None:
+        dma.popContent()
+    else:
+        dma.setContent(Grupo(dma_tmp, janela))
+    
+    for p in gm.fila_de_processos.novo.fila:
+        filas[0].add(Grupo(p, janela))
+    for p in gm.fila_de_processos.pronto.fila:
+        filas[1].add(Grupo(p, janela))
+    for p in gm.fila_de_processos.bloqueado_page_fault.fila:
+        filas[2].add(Grupo(p, janela))
+    for p in gm.fila_de_processos.bloqueado_IO.fila:
+        filas[3].add(Grupo(p, janela))
+    for p in gm.fila_de_processos.sus_pronto.fila:
+        filas[4].add(Grupo(p, janela))
+    for p in gm.fila_de_processos.sus_bloqueado.fila:
+        filas[5].add(Grupo(p, janela))
+    
+    tfp = gm.fault_rate
+    mdpf = gm.mem_waste
+    nfp = gm.page_faults
+
+    for i, t in enumerate(gm.TP):
+        for r in t.registros:
+            if r.p == True:
+                P = 1
+            else:
+                P = 0
+            if r.m == True:
+                M = 1
+            else:
+                M = 0
+            tps[i].add((P, M, r.numQuadro))
+
 '''
 #Leitura de Arquivo
 arquivo = open("nome_arq", 'r')
@@ -110,7 +158,7 @@ for i in range(tam_mp):
 nomesDasFilas = ("Novo", "Pronto", "Bloq. Page Fault", "Bloq. por E/S", "Pronto-Suspenso", "Bloq.-Suspenso")
 filas = []
 for i in range (6):
-    filas.append(Coluna(20 + i * 170, 550, nomesDasFilas[i]))
+    filas.append(Coluna(20 + i * 170, 610, nomesDasFilas[i]))
     '''for j in range(2):
         filas[i].add(Grupo(processos[i*2 + j], janela))
 
@@ -128,19 +176,16 @@ pauseButton = Sprite("Sprites/Botao_Pausa.png")
 pauseButton.set_position(1275, 750)
 
 tps = [None]*3
-tps[0] = TabelaDePaginasUI(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 0")
-tps[1] = TabelaDePaginasUI(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 1", 300)
-tps[2] = TabelaDePaginasUI(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 2", 550)
+tps[0] = TabelaDePaginasUI(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 0")
+tps[1] = TabelaDePaginasUI(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 1", 300)
+tps[2] = TabelaDePaginasUI(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 2", 550)
 tps[2].add((0, 0, "End yyy"))
-tps[2].setAddress(4, "End zzz")
-tps[2].setM(2, 1)
-tps[2].setAddress(4, "a")
-tps[2].setAddress(2, "baoefh")
-tps[2].setAddress(6, "ble")
-tps[2].setP(1, 1)
 
 for i in range(7):
-    tps.append(TabelaDePaginasUI(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], f"TP - Processo {i + 3}", 50 + i*250))
+    tps.append(TabelaDePaginasUI(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], f"TP - Processo {i + 3}", 85 + i*250, 100))
+
+for i in range(7):
+    tps.append(TabelaDePaginasUI(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], f"TP - Processo {i + 10}", 85 + i*250, 600))
 
 '''
 print("Informe numero de bits da pagina, e numero de bits dos quadros")
@@ -188,7 +233,7 @@ while True:
         for i in filas:
             i.draw()
             i.draw_text(janela)
-        write(janela, f"Taxa de falta de páginas: {tfp};;Memória desperdiçada por fragmentação: {mdpf}", 50, 50, 20)
+        write(janela, f"Taxa de falta de páginas: {tfp}                                Número de falta de páginas: {nfp};;Memória desperdiçada por fragmentação: {mdpf}", 50, 50, 20)
 
         if not pressed and Mouse.is_button_pressed(1):
             pressed = True

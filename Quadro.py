@@ -1,8 +1,11 @@
 class Quadro:
+
+    pagina = None
+
     def __init___(self):
         self.last_update = 0
         self.presenca = False
-        self.pagina = False#Tem a referida pagina
+        self.pagina = None#Tem a referida pagina
     
 
 
