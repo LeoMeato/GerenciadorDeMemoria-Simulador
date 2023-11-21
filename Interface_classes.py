@@ -3,7 +3,7 @@ from PPlay.sprite import *
 from Processo import *
 from Pagina import *
 
-class TabelaDePaginas:
+class TabelaDePaginasUI:
 
     def __init__(self, janela, list, title, x=50, y=170) -> None:
         self.coluna = Coluna(x, y, title)
@@ -110,6 +110,10 @@ class Reta: # Classe Abstrata
         self.array = []
         self.x = x
         self.y = y
+    
+     def delete(self):
+         for i in range(len(self.array)):
+             self.pop(0)
     
      def draw(self):
         for i in range(len(self.array) - 1, -1, -1):

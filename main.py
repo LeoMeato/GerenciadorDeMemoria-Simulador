@@ -6,12 +6,19 @@ from Quadro import *
 from FilaDeProcessos import *
 from Interface_classes import *
 from Pagina import Agrupamento
+from Gerenciador import *
 
 janela = Window(1920, 1080)
 janela.set_title("Gerenciador de Memória")
 Mouse = janela.get_mouse()
 teclado = janela.get_keyboard()
 pressed = False
+
+global gm
+
+# gm = Gerenciador()
+
+global podeExecutar
 
 global tam_mp
 global tfp
@@ -20,6 +27,11 @@ global mdpf
 global ms
 global mp
 global cpu
+
+global filas
+global tps
+
+podeExecutar = True
 
 tam_mp = 16
 tfp = 0
@@ -30,6 +42,21 @@ mp = Coluna(1650, 50, "MP")
 cpu = Container("Sprites/Cpu_Label.jpg", "CPU"); cpu.set_position(1250, 500)
 dma = Container("Sprites/Dma_Label.jpg", "DMA"); dma.set_position(1250, 630)
 
+def atualiza():
+    ms.delete()
+    for v in mp.array:
+        v.popContent()
+    for v in filas:
+        v.delete()
+    for v in tps:
+        v.coluna.delete()
+        v.list = []
+
+    
+    for i, q in enumerate(gm.MP.quadros):
+        mp.array[i].setContent(Grupo(q.pagina, janela))
+    for p in gm.MS.images:
+        ms.add(Grupo(p, janela))
 '''
 #Leitura de Arquivo
 arquivo = open("nome_arq", 'r')
@@ -101,9 +128,9 @@ pauseButton = Sprite("Sprites/Botao_Pausa.png")
 pauseButton.set_position(1275, 750)
 
 tps = [None]*3
-tps[0] = TabelaDePaginas(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 0")
-tps[1] = TabelaDePaginas(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 1", 300)
-tps[2] = TabelaDePaginas(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 2", 550)
+tps[0] = TabelaDePaginasUI(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 0")
+tps[1] = TabelaDePaginasUI(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 1", 300)
+tps[2] = TabelaDePaginasUI(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 2", 550)
 tps[2].add((0, 0, "End yyy"))
 tps[2].setAddress(4, "End zzz")
 tps[2].setM(2, 1)
@@ -113,7 +140,7 @@ tps[2].setAddress(6, "ble")
 tps[2].setP(1, 1)
 
 for i in range(7):
-    tps.append(TabelaDePaginas(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], f"TP - Processo {i + 3}", 50 + i*250))
+    tps.append(TabelaDePaginasUI(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], f"TP - Processo {i + 3}", 50 + i*250))
 
 '''
 print("Informe numero de bits da pagina, e numero de bits dos quadros")
@@ -136,6 +163,9 @@ print(f.pronto.fila)'''             #mo tempão que isso tá aqui comentado. sej
 page = 1
 
 while True:
+    if podeExecutar:
+        # chama o gerenciador aqui
+        atualiza()
     janela.set_background_color([255, 255, 255])
     if teclado.key_pressed("1"):
         page = 1
@@ -161,10 +191,12 @@ while True:
         write(janela, f"Taxa de falta de páginas: {tfp};;Memória desperdiçada por fragmentação: {mdpf}", 50, 50, 20)
 
         if not pressed and Mouse.is_button_pressed(1):
-            print("uepa")
             pressed = True
             if Mouse.is_over_area((pauseButton.x, pauseButton.y), (pauseButton.x + pauseButton.width, pauseButton.y + pauseButton.height)):
-                print ("rapaaaiz")
+                if podeExecutar == True:
+                    podeExecutar = False
+                elif podeExecutar == False:
+                    podeExecutar = True
 
         if not Mouse.is_button_pressed(1):
             pressed = False
