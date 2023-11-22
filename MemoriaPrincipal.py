@@ -1,5 +1,4 @@
 from Quadro import *
-from Swapper import *
 from TabelaDePaginas import *
 from Interface_funções import *
 

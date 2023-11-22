@@ -17,6 +17,7 @@ pressed = False
 global gm
 
 gm = Gerenciador(6, 8, 2, 5, 4, "blabla.txt")
+gm.cria_processo(1, 4)
 
 global podeExecutar
 

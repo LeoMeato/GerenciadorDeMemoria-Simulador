@@ -21,7 +21,7 @@ class MemoriaSecundaria:
         if (processo in self.images): 
             erro("Processo duplicado na MS :(;O arquivo de entrada está correto?")
 
-        if (self.free_space < processo.pbc.tam):
+        if (self.free_space < processo.pcb.tam):
             erro("MS explodiu :(; Espaço de swap excedido")
 
         self.images.append(processo)

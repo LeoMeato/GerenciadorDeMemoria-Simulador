@@ -1,7 +1,6 @@
 #   O arquivo contém a classe responsável pelo gerenciamento
 #   da memória do sistema e dos componentes associados
 from math import *
-from Swapper import *
 from Processo import *
 from utilidades import *
 from FilaDeProcessos import *
@@ -87,10 +86,11 @@ class Gerenciador:
     #   Método responsável por carregar a imagem de um processo sem nenhuma página na MP para a mesma
     #   O número de quadros carregados é decidido por uma configuração
     def carrega_imagem_MP(self, processo):
-            
-            for i in range(self.n_resident):
+            i = 0
+            while i < self.n_resident and i < len(processo.paginas) - 1:
                 pagina = self.MS.swap_in(processo.id, i)
                 self.add_LRU(pagina)
+                i += 1
 
     #   Método implementa a polítical de substituição de páginas do sistema
     #   Desculpa pelo método gigante gente
