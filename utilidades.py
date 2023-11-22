@@ -32,5 +32,3 @@ def decimal_binario(str):
         multiplica *= 10
     convertido += num
     return int(convertido)
-
-print(decimal_binario(input()))

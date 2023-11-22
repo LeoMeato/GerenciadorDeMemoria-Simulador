@@ -87,7 +87,7 @@ class Gerenciador:
     #   O número de quadros carregados é decidido por uma configuração
     def carrega_imagem_MP(self, processo):
             i = 0
-            while i < self.n_resident and i < len(processo.paginas) - 1:
+            while i < self.n_resident and i < len(processo.paginas):
                 pagina = self.MS.swap_in(processo.id, i)
                 self.add_LRU(pagina)
                 i += 1
