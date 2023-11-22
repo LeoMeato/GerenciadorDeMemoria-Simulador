@@ -168,7 +168,8 @@ class Gerenciador:
 
         waste = 0
         for q in self.MP.quadros:
-            waste += self.frame_size - q.pagina.tam
+            if q.presenca:
+                waste += self.frame_size - q.pagina.tam
         return waste
     
     def ganha_CPU(self, pid):
