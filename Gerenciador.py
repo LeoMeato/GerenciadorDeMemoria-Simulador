@@ -80,9 +80,11 @@ class Gerenciador:
         self.msgs.append(f"Tabela de páginas {pid} criada")
 
         self.tabela_de_processos.append(p)
-        self.msgs.append(f"")
+        self.msgs.append(f"{pid} para Tabela de Processos")
         self.MS.load_image(p)
+        self.msgs.append(f"Imagem de {pid} carregada para MS")
         self.carrega_imagem_MP(p)
+        self.msgs.append(f"Parte de {pid} carregada em MP")
 
 
     #   Método responsável por carregar a imagem de um processo sem nenhuma página na MP para a mesma
@@ -109,6 +111,7 @@ class Gerenciador:
             quadro = self.MP.quadros[i]
 
             if not quadro.presenca:
+                self.msgs.append(f"Página {new_page_num} posta em quadro vazio {i}")
                 self.MP.aloca_pagina(i, pagina)
                 new_tp.aloca_entrada(new_page_num, i)
                 return
@@ -119,11 +122,11 @@ class Gerenciador:
 
 
         ##### IMPORTANTE: USAR O BIT M PARA VERIFICAR SE A CHAMDA DE SWAP OUT FAZ SENTIDO
-
+        self.msgs.append(f"Quadro LRU: {lru_index}")
         old_pid = self.pid_of_page(quadro.pagina)
         old_page_num = self.num_of_page(quadro.pagina)
         old_tp = self.TP_by_pid(old_pid)
-
+        
         if old_tp.registros[old_page_num].m:    #Se a página antiga não foi modificada, evita o swapout desnecessário
             self.MS.swap_out(old_pid, old_page_num, quadro.pagina)
         self.MP.retira_pagina(lru_index)
