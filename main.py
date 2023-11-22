@@ -55,7 +55,7 @@ mp = Coluna(1650, 50, "MP")
 cpu = Container("Sprites/Cpu_Label.jpg", "CPU"); cpu.set_position(1250, 500)
 dma = Container("Sprites/Dma_Label.jpg", "DMA"); dma.set_position(1250, 630)
 
-sleepTime = 1.5
+sleepTime = 0.1
 
 def atualiza():
         
@@ -131,7 +131,8 @@ def executar():
         end = pieces[2]
         print(line)
         if inst == "P":
-            pass
+            gm.CPUinstruction(pid, end)
+
         elif inst == "I":
             gm.begin_IO_instruction(pid)
 
@@ -140,7 +141,7 @@ def executar():
 
         elif inst == "W":
             gm.MPwrite(pid, end)
-            pass
+
         elif inst == "C":
             size = binario_decimal(end)
             gm.cria_processo(pid, size)
