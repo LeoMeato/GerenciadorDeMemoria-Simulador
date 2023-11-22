@@ -77,15 +77,16 @@ class Grupo(Sprite):
      # Classe que herda de Sprite e tem como função reunir um sprite de label e seu conteúdo (texto),
      # bem como acoplar seus desenhos na tela.
 
-     def __init__(self, agrupamento, janela, ratio=14,frames=1):
+     def __init__(self, agrupamento, janela, font=25, ratio=14,frames=1):
          self.ratio = ratio
+         self.font = font
          super().__init__(agrupamento.label, frames)
          self.txt = agrupamento.content
          self.janela = janela
     
      def draw(self):
          super().draw()
-         self.janela.draw_text(self.txt, self.x + self.width/self.ratio, self.y + self.height/self.ratio * 2, 25, (0, 0, 0), "Comic Sans")
+         self.janela.draw_text(self.txt, self.x + self.width/self.ratio, self.y + self.height/self.ratio * 2, self.font, (0, 0, 0), "Comic Sans")
 
 class MessageBox:
     def __init__(self, tam, x, y, janela) -> None:
@@ -99,7 +100,7 @@ class MessageBox:
     
     def newMessage(self, msg):
         self.coluna.pop(0)
-        self.coluna.add(Grupo(Agrupamento("Sprites/Caixa_De_Acao.jpg", msg), self.janela, 60))
+        self.coluna.add(Grupo(Agrupamento("Sprites/Caixa_De_Acao.jpg", msg), self.janela, 20, 60))
 
 
 class Reta: # Classe Abstrata
