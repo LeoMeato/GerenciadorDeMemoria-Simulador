@@ -7,6 +7,7 @@ from FilaDeProcessos import *
 from Interface_classes import *
 from Pagina import Agrupamento
 from Gerenciador import *
+from time import sleep
 
 janela = Window(1920, 1080)
 janela.set_title("Gerenciador de Memória")
@@ -36,7 +37,10 @@ global cpu
 global filas
 global tps
 
-podeExecutar = True
+global sleepTime
+
+podeExecutarPorPausa = True
+podeExecutarPorTempo = False
 
 tam_mp = 2**gm.bits_mp
 tfp = 0
@@ -48,66 +52,72 @@ mp = Coluna(1650, 50, "MP")
 cpu = Container("Sprites/Cpu_Label.jpg", "CPU"); cpu.set_position(1250, 500)
 dma = Container("Sprites/Dma_Label.jpg", "DMA"); dma.set_position(1250, 630)
 
+sleepTime = 1
+
 def atualiza():
-    global tfp
-    global mdpf
-    global nfp
-    ms.delete()
-    for v in mp.array:
-        v.popContent()
-    for v in filas:
-        v.delete()
-    for v in tps:
-        v.coluna.delete()
-        v.list = []
-
-    
-    for i, q in enumerate(gm.MP.quadros):
-        if q.pagina != None:
-            mp.array[i].setContent(Grupo(q.pagina, janela))
-    for p in gm.MS.images:
-        ms.add(Grupo(p, janela))
-
-    cpu_tmp = gm.executando
-    if cpu_tmp == None:
-        cpu.popContent()
+    if gm.msgs != []:
+        messageBox.newMessage(gm.msgs[0])
+        gm.msgs.pop(0)
     else:
-        cpu.setContent(Grupo(cpu_tmp, janela))
-    
-    dma_tmp = gm.emIO
-    if dma_tmp == None:
-        dma.popContent()
-    else:
-        dma.setContent(Grupo(dma_tmp, janela))
-    
-    for p in gm.fila_de_processos.novo.fila:
-        filas[0].add(Grupo(p, janela))
-    for p in gm.fila_de_processos.pronto.fila:
-        filas[1].add(Grupo(p, janela))
-    for p in gm.fila_de_processos.bloqueado_page_fault.fila:
-        filas[2].add(Grupo(p, janela))
-    for p in gm.fila_de_processos.bloqueado_IO.fila:
-        filas[3].add(Grupo(p, janela))
-    for p in gm.fila_de_processos.sus_pronto.fila:
-        filas[4].add(Grupo(p, janela))
-    for p in gm.fila_de_processos.sus_bloqueado.fila:
-        filas[5].add(Grupo(p, janela))
-    
-    tfp = gm.fault_rate
-    mdpf = gm.mem_waste
-    nfp = gm.page_faults
+        global tfp
+        global mdpf
+        global nfp
+        ms.delete()
+        for v in mp.array:
+            v.popContent()
+        for v in filas:
+            v.delete()
+        for v in tps:
+            v.coluna.delete()
+            v.list = []
 
-    for i, t in enumerate(gm.TP):
-        for r in t.registros:
-            if r.p == True:
-                P = 1
-            else:
-                P = 0
-            if r.m == True:
-                M = 1
-            else:
-                M = 0
-            tps[i].add((P, M, r.numQuadro))
+        
+        for i, q in enumerate(gm.MP.quadros):
+            if q.pagina != None:
+                mp.array[i].setContent(Grupo(q.pagina, janela))
+        for p in gm.MS.images:
+            ms.add(Grupo(p, janela))
+
+        cpu_tmp = gm.executando
+        if cpu_tmp == None:
+            cpu.popContent()
+        else:
+            cpu.setContent(Grupo(cpu_tmp, janela))
+        
+        dma_tmp = gm.emIO
+        if dma_tmp == None:
+            dma.popContent()
+        else:
+            dma.setContent(Grupo(dma_tmp, janela))
+        
+        for p in gm.fila_de_processos.novo.fila:
+            filas[0].add(Grupo(p, janela))
+        for p in gm.fila_de_processos.pronto.fila:
+            filas[1].add(Grupo(p, janela))
+        for p in gm.fila_de_processos.bloqueado_page_fault.fila:
+            filas[2].add(Grupo(p, janela))
+        for p in gm.fila_de_processos.bloqueado_IO.fila:
+            filas[3].add(Grupo(p, janela))
+        for p in gm.fila_de_processos.sus_pronto.fila:
+            filas[4].add(Grupo(p, janela))
+        for p in gm.fila_de_processos.sus_bloqueado.fila:
+            filas[5].add(Grupo(p, janela))
+        
+        tfp = gm.fault_rate
+        mdpf = gm.mem_waste
+        nfp = gm.page_faults
+
+        for i, t in enumerate(gm.TP):
+            for r in t.registros:
+                if r.p == True:
+                    P = 1
+                else:
+                    P = 0
+                if r.m == True:
+                    M = 1
+                else:
+                    M = 0
+                tps[i].add((P, M, r.numQuadro))
 
 def executar():
     arquivo = open(gm.arq_entrada, "r")
@@ -233,11 +243,23 @@ print(f.pronto.fila)'''             #mo tempão que isso tá aqui comentado. sej
 
 page = 1
 
+tempo = 0
+
 while True:
-    if podeExecutar:
-        executar()
-        atualiza()
+
     janela.set_background_color([255, 255, 255])
+
+    tempo += janela.delta_time()
+    print(tempo)
+    if tempo > sleepTime:
+        podeExecutarPorTempo = True
+
+    if podeExecutarPorPausa and podeExecutarPorTempo:
+        #executar()
+        atualiza()
+        podeExecutarPorTempo = False
+        tempo = 0
+    
     if teclado.key_pressed("1"):
         page = 1
     elif teclado.key_pressed("2"):
@@ -264,10 +286,10 @@ while True:
         if not pressed and Mouse.is_button_pressed(1):
             pressed = True
             if Mouse.is_over_area((pauseButton.x, pauseButton.y), (pauseButton.x + pauseButton.width, pauseButton.y + pauseButton.height)):
-                if podeExecutar == True:
-                    podeExecutar = False
-                elif podeExecutar == False:
-                    podeExecutar = True
+                if podeExecutarPorPausa == True:
+                    podeExecutarPorPausa = False
+                elif podeExecutarPorPausa == False:
+                    podeExecutarPorPausa = True
 
         if not Mouse.is_button_pressed(1):
             pressed = False
