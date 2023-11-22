@@ -27,7 +27,7 @@ class Gerenciador:
         #   do gerenciador e coleta de dados de execução
         self.clock = 0
         self.time_since_swap = 0
-        self.faults_since_swap = 0
+        self.faults_since_swap = -3 #Inicializado como negativo para evitar suspensões no início da simulação
 
         #   Essas variáveis são coletadas ao longo da execução de uma instância
         #   e exibidas em uma interface
