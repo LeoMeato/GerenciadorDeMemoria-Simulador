@@ -394,5 +394,4 @@ class Gerenciador:
         if p.pcb.estado == "bloqueado":
             self.fila_de_processos.transita(pid, "sus_bloqueado", "bloqueado_IO")
         else:
-            self.fila_de_processos.transita(pid, "sus_pronto", "pronto")    #Eu acredito que não é muito inteligente carregar a imagem de um processo bloqueado
-            self.carrega_imagem_MP(p)
+            self.fila_de_processos.transita(pid, "sus_pronto", "pronto")
