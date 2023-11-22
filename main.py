@@ -259,7 +259,7 @@ while True:
         podeExecutarPorTempo = True
 
     if podeExecutarPorPausa and podeExecutarPorTempo:
-        #executar()
+        executar()
         atualiza()
         podeExecutarPorTempo = False
         tempo = 0

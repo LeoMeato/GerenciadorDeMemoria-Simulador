@@ -1,0 +1,23 @@
+P1	C	100000	#Cria_processo_1
+P2	C	100000	#Cria _processo_2
+P1	R	1	#
+P1	R	10	#
+P1	R	1111	#
+P2	I		#Entrada
+P3	C	100000	#Cria_processo_3
+P1	R	10000	#Falta
+P2	E		#Evento
+P2	R	1	#
+P2	R	10	#
+P2	R	11	#
+P3	R	100	#
+P5	C	20	#Cria_processo_5
+P4	C	20	#Cria_processo_4
+P1	I		#Entrada
+P4	R	1111	#
+P5	R	1111	#
+P4	R	10000	#
+P1	E		#Evento
+P1	T		#
+P3	T		#
+P2	T		#
