@@ -54,7 +54,7 @@ mp = Coluna(1650, 50, "MP")
 cpu = Container("Sprites/Cpu_Label.jpg", "CPU"); cpu.set_position(1250, 500)
 dma = Container("Sprites/Dma_Label.jpg", "DMA"); dma.set_position(1250, 630)
 
-sleepTime = 0.08
+sleepTime = 0.2
 
 finalizado = False
 
@@ -320,7 +320,10 @@ while True:
         for i in filas:
             i.draw()
             i.draw_text(janela)
-        write(janela, f"Taxa de falta de páginas: {tfp:.2f}                                Número de falta de páginas: {nfp};;Memória desperdiçada por fragmentação: {mdpf}", 50, 50, 20)
+        tfp_show = tfp
+        if tfp < 0:
+            tfp_show = 0
+        write(janela, f"Taxa de falta de páginas: {tfp_show:.2f}                                Número de falta de páginas: {nfp};;Memória desperdiçada por fragmentação: {mdpf}", 50, 50, 20)
 
         if not pressed and Mouse.is_button_pressed(1):
             pressed = True
