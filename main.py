@@ -18,7 +18,7 @@ pressed = False
 global gm
 global arquivo
 
-gm = Gerenciador(4, 8, 2, 5, 2, "entrada.txt")
+gm = Gerenciador(6, 8, 2, 5, 2, "entrada.txt")
 # gm.cria_processo(2, 16)
 # gm.fila_de_processos.transita(2, "novo", "pronto")
 # gm.ganha_CPU(2)
@@ -44,8 +44,7 @@ global sleepTime
 
 podeExecutarPorPausa = True
 podeExecutarPorTempo = False
-
-tam_mp = 2**gm.bits_mp
+tam_mp = int(2**(gm.bits_mp - gm.bits_frame))
 tfp = 0
 mdpf = 0
 nfp = 0
@@ -55,7 +54,9 @@ mp = Coluna(1650, 50, "MP")
 cpu = Container("Sprites/Cpu_Label.jpg", "CPU"); cpu.set_position(1250, 500)
 dma = Container("Sprites/Dma_Label.jpg", "DMA"); dma.set_position(1250, 630)
 
-sleepTime = 0.1
+sleepTime = 0.08
+
+finalizado = False
 
 def atualiza():
         
@@ -120,60 +121,64 @@ def atualiza():
                 tps[i].add((P, M, r.numQuadro))
 
 def executar():
+    global finalizado
     if gm.msgs != []:
         messageBox.newMessage(gm.msgs[0])
         gm.msgs.pop(0)
     else:
         line = arquivo.readline()
-        pieces = line.split()
-        if len(pieces) == 0:#############################################Fim do arquivo encontrado
-            input()
-            exit()
-        pid = int(pieces[0].split("P")[1])
-        inst = pieces[1]
-        end = pieces[2]
-        print(line)
-        if inst == "P":
+        if line != "":
+            pieces = line.split()
+            pid = int(pieces[0].split("P")[1])
+            inst = pieces[1]
+            end = pieces[2]
+            print(line)
+            if inst == "P":
 
-            p = gm.process_by_pid(pid)
-            if p.pcb.suspenso:
-                gm.unsuspend(pid)
+                p = gm.process_by_pid(pid)
+                if p.pcb.suspenso:
+                    gm.unsuspend(pid)
 
-            gm.CPUinstruction(pid, end)
+                gm.CPUinstruction(pid, end)
 
-        elif inst == "I":
+            elif inst == "I":
 
-            p = gm.process_by_pid(pid)
-            if p.pcb.suspenso:
-                gm.unsuspend(pid)
-            gm.begin_IO_instruction(pid)
+                p = gm.process_by_pid(pid)
+                if p.pcb.suspenso:
+                    gm.unsuspend(pid)
+                gm.begin_IO_instruction(pid)
 
-        elif inst == "R":
+            elif inst == "R":
 
-            p = gm.process_by_pid(pid)
-            if p.pcb.suspenso:
-                gm.unsuspend(pid)
+                p = gm.process_by_pid(pid)
+                if p.pcb.suspenso:
+                    gm.unsuspend(pid)
 
-            gm.MPread(pid, end)
+                gm.MPread(pid, end)
 
-        elif inst == "W":
+            elif inst == "W":
 
-            p = gm.process_by_pid(pid)
-            if p.pcb.suspenso:
-                gm.unsuspend(pid)
+                p = gm.process_by_pid(pid)
+                if p.pcb.suspenso:
+                    gm.unsuspend(pid)
 
-            gm.MPwrite(pid, end, write=True)
+                gm.MPwrite(pid, end, write=True)
 
-        elif inst == "C":
-            
-            size = binario_decimal(end)
-            gm.cria_processo(pid, size)
-            gm.fila_de_processos.transita(pid, "novo", "pronto")
-            
-        elif inst == "T":
-            gm.terminateProcess(pid)
-        elif inst == "E":
-            gm.end_IO_instruction(pid)
+            elif inst == "C":
+                
+                size = binario_decimal(end)
+                gm.cria_processo(pid, size)
+                gm.fila_de_processos.transita(pid, "novo", "pronto")
+                
+            elif inst == "T":
+                gm.terminateProcess(pid)
+            elif inst == "E":
+                gm.end_IO_instruction(pid)
+        elif not finalizado:
+            gm.msgs = [" ", " ", "Alunos:", "Arthur Sodré", "Fábio Gabriel", "Leonardo Meato", "Thiago Thomaz"]
+            finalizado = True
+        else:
+            pass
 
 '''
 #Leitura de Arquivo
@@ -315,7 +320,7 @@ while True:
         for i in filas:
             i.draw()
             i.draw_text(janela)
-        write(janela, f"Taxa de falta de páginas: {tfp}                                Número de falta de páginas: {nfp};;Memória desperdiçada por fragmentação: {mdpf}", 50, 50, 20)
+        write(janela, f"Taxa de falta de páginas: {tfp:.2f}                                Número de falta de páginas: {nfp};;Memória desperdiçada por fragmentação: {mdpf}", 50, 50, 20)
 
         if not pressed and Mouse.is_button_pressed(1):
             pressed = True
