@@ -2,7 +2,10 @@ class TabelaDePaginas:
 
     def __init__(self, id, numPags):
         self.id = id
-        self.registros = [Registro()] * numPags
+
+        self.registros = []
+        for a in range(numPags):
+            self.registros.append(Registro())
 
 
 
