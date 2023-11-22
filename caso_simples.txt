@@ -1,22 +1,22 @@
-P1	C	32	#Cria_processo_1
-P2	C	32	#Cria _processo_2
-P1	R	1	#
-P1	R	2	#
-P1	R	15	#
+P1	C	100000	#Cria_processo_1
+P2	C	100000	#Cria _processo_2
+P1	R	00001	#
+P1	R	00010	#
+P1	R	01111	#
 P2	I		#Entrada
-P3	C	32	#Cria_processo_3
-P1	R	16	#Falta
+P3	C	100000	#Cria_processo_3
+P1	R	010000	#Falta
 P2	E		#Evento
-P2	R	1	#
-P2	R	2	#
-P2	R	3	#
-P3	R	4	#
-P5	C	20	#Cria_processo_5
-P4	C	20	#Cria_processo_4
+P2	R	00001	#
+P2	R	00010	#
+P2	R	00011	#
+P3	R	00100	#
+P5	C	10100	#Cria_processo_5
+P4	C	10100	#Cria_processo_4
 P1	I		#Entrada
-P4	R	15	#
-P5	R	15	#
-P4	R	16	#
+P4	R	01111	#
+P5	R	01111	#
+P4	R	10000	#
 P1	E		#Evento
 P1	T		#
 P3	T		#

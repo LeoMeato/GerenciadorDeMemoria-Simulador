@@ -1,0 +1,38 @@
+Na implementação do gerenciador de memória foram utilizadas as seguintes estruturas:
+
+Tabela de Processos:
+
+	Estrutura linear que permite ao gerenciador acessar o pcb
+	de qualquer processo num dado instante
+
+	É implementada como uma lista de ponteiros para os diversos
+	pcbs
+
+Tabelas de Páginas:
+
+	Estrutura básica que relaciona a localização das páginas
+	de um processo na MP
+
+	São implementadas como listas de registros para ocupar menos espaço
+	e coordenadas pelo gerenciador
+
+Fila de Processos:
+
+	Estrutura responsável por gerenciar as diversas sub-filas de
+	processos. Cada sub-fila é associada a um estado de execução e
+	a "Arqui-fila" coordena transições entre elas
+
+	É implementada por uma lista de filas e um dicionário auxiliar, 
+	utilizado apenas para facilitar a escrita de procedimentos
+
+Memórias Principal e Secundária:
+
+	A parte principal de um gerenciador de memória, são representadas
+	por vetores de tamanho configurável contendo suas diversas imagens,
+	páginas, etc
+
+
+Foram necessárias apenas estruturas de dados simples e de rápido acesso,
+salvo complicações acarretadas pela interface gráfica ou limitações da
+linguagem escolhida.
+

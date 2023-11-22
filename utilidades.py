@@ -22,13 +22,13 @@ dic = {
 for i in dic.values():
     print(i)'''
 
-def decimal_binario(str):
-    num = int(str)
-    convertido = 0
-    multiplica = 1
-    while num != 1 and num != 0:
-        convertido += (int(num % 2) * multiplica)
-        num = num / 2
-        multiplica *= 10
-    convertido += num
-    return int(convertido)
+# def decimal_binario(str):
+#     num = int(str)
+#     convertido = 0
+#     multiplica = 1
+#     while num != 1 and num != 0:
+#         convertido += (int(num % 2) * multiplica)
+#         num = num / 2
+#         multiplica *= 10
+#     convertido += num
+#     return int(convertido)
