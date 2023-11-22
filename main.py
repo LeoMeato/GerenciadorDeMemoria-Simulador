@@ -19,9 +19,9 @@ global gm
 global arquivo
 
 gm = Gerenciador(6, 8, 2, 5, 4, "entrada.txt")
-gm.cria_processo(2, 16)
-gm.fila_de_processos.transita(2, "novo", "pronto")
-gm.ganha_CPU(2)
+# gm.cria_processo(2, 16)
+# gm.fila_de_processos.transita(2, "novo", "pronto")
+# gm.ganha_CPU(2)
 
 arquivo = open(gm.arq_entrada, "r")
 
@@ -55,7 +55,7 @@ mp = Coluna(1650, 50, "MP")
 cpu = Container("Sprites/Cpu_Label.jpg", "CPU"); cpu.set_position(1250, 500)
 dma = Container("Sprites/Dma_Label.jpg", "DMA"); dma.set_position(1250, 630)
 
-sleepTime = 1
+sleepTime = 0.2
 
 def atualiza():
     if gm.msgs != []:
@@ -143,6 +143,7 @@ def executar():
     elif inst == "C":
         size = binario_decimal(end)
         gm.cria_processo(pid, size)
+        gm.fila_de_processos.transita(pid, "novo", "pronto")
     elif inst == "T":
         gm.terminateProcess(pid)
     elif inst == "E":
