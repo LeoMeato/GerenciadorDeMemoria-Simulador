@@ -34,7 +34,7 @@ class FilaDeProcessos:
 
         processo = self.filas[fila1].remove_pid(pid)
         if (processo == None):
-            erro("Transição inválida. Processo " + pid + " não encontrado na fila " + fila1)
+            erro("Transição inválida. Processo " + str(pid) + " não encontrado na fila " + fila1)
             
         self.filas[fila2].adicionar(processo)
     

@@ -241,7 +241,7 @@ class Gerenciador:
         self.atualizaDados()
     
     def begin_IO_instruction(self, pid):
-
+        
         self.ganha_CPU(pid)
         p = self.process_by_pid(pid)
 
