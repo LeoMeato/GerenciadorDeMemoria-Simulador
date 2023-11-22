@@ -34,7 +34,7 @@ global tps
 
 podeExecutar = True
 
-tam_mp = 16
+tam_mp = 2**gm.bits_mp
 tfp = 0
 mdpf = 0
 nfp = 0
