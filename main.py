@@ -55,7 +55,7 @@ mp = Coluna(1650, 50, "MP")
 cpu = Container("Sprites/Cpu_Label.jpg", "CPU"); cpu.set_position(1250, 500)
 dma = Container("Sprites/Dma_Label.jpg", "DMA"); dma.set_position(1250, 630)
 
-sleepTime = 0.2
+sleepTime = 1.5
 
 def atualiza():
         

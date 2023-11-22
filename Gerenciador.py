@@ -242,11 +242,12 @@ class Gerenciador:
     
     def begin_IO_instruction(self, pid):
         
+
         self.ganha_CPU(pid)
         p = self.process_by_pid(pid)
 
         self.executando = None
-        self.fila_de_processos.transita(pid, "pronto", "bloqueado")
+        self.fila_de_processos.bloqueado_IO.adicionar(p)
 
         if (self.emIO == None):
             self.emIO = p
@@ -265,7 +266,8 @@ class Gerenciador:
 
             self.fila_de_processos.transita(pid, "bloqueado_IO", "pronto")
         
-        self.emIO = self.fila_de_processos.bloqueado_IO.remover()
+        if len(self.fila_de_processos.bloqueado_IO.fila) != 0:
+            self.emIO = self.fila_de_processos.bloqueado_IO.remover()
 
         self.atualizaDados()
 
