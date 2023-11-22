@@ -22,7 +22,7 @@ class Gerenciador:
     #   Tamanhos são recebidos no formato log2(tamanho desejado) por padrão
     #   n_residente_inicial se refere ao tamanho do conjunto residente alocado na criação de um processo
     #   que passa pela transição (novo, pronto)
-    def __init__(self, bits_mp, bits_ms, bits_frame, bits_log, n_residente, arq_entrada):
+    def __init__(self, bits_mp, bits_ms, bits_frame, bits_log, n_residente, max_fault_rate, arq_entrada):
         
         #   A variável clock é usada como indicação de tempo para a implementação de políticas
         #   do gerenciador e coleta de dados de execução
@@ -48,6 +48,7 @@ class Gerenciador:
         self.bits_log = bits_log
         self.bits_frame = bits_frame
         self.n_resident = n_residente
+        self.max_fault_rate = max_fault_rate
 
         self.frame_size = 2**bits_frame
         self.arq_entrada = arq_entrada
@@ -88,7 +89,7 @@ class Gerenciador:
     def carrega_imagem_MP(self, processo):
             
             for i in range(self.n_resident):
-                pagina = processo.paginas[i]
+                pagina = self.MS.swap_in(processo.id, i)
                 self.add_LRU(pagina)
 
     #   Método implementa a polítical de substituição de páginas do sistema
@@ -115,11 +116,14 @@ class Gerenciador:
                 max_age = quadro.last_update
 
 
+        ##### IMPORTANTE: USAR O BIT M PARA VERIFICAR SE A CHAMDA DE SWAP OUT FAZ SENTIDO
+
         old_pid = self.pid_of_page(quadro.pagina)
         old_page_num = self.num_of_page(quadro.pagina)
         old_tp = self.TP_by_pid(old_pid)
 
-        self.MS.swap_out(old_pid, old_page_num, quadro.pagina)
+        if old_tp.registros[old_page_num].m:    #Se a página antiga não foi modificada, evita o swapout desnecessário
+            self.MS.swap_out(old_pid, old_page_num, quadro.pagina)
         self.MP.retira_pagina(lru_index)
         old_tp.desaloca_entrada(old_page_num)
 
@@ -303,13 +307,92 @@ class Gerenciador:
 
         self.atualizaDados()
 
+
+    #   Método utilizado para julgar se o número recente de faltas de páginas é excessivo
+    #   e realizar a suspensão de um processo caso necessário
+    def check_fault_rate(self):
+        if self.fault_rate >= self.max_fault_rate:
+            self.call_swap_out()
+        
+
     #   Método utilizado para suspender um processo, que será escolhido pelo swapper
     #   Deve ser chamado quando a taxa de falta de páginas atingir um número inaceitável
-    def callSwapOut(self):
+    #   A política implementada suspende o processo que ocupa mais espaço na MP no momento
+    #   da chamada
+    def call_swap_out(self):
+
+        max_use = -1
+        max_use_i = 0
+
+        for i in range(len(self.TP)):
+
+            tp = self.TP[i]
+            if self.executando != None and tp.id == self.executando.id: #Garantindo que o processo em execução não é um candidato a suspensão
+                continue
+
+            mp_use = 0
+
+            for r in tp:
+
+                if r.p:
+                    mp_use += self.MP.quadros[r.numQuadro]
+            
+            if mp_use > max_use:
+                 max_use = mp_use
+                 max_use_i = i
+
         
-        pass
+        tp = self.TP[max_use_i]
+        self.suspend(self, tp.id, tp)
+
+
+    #   Método utilizado para suspender um processo
+    #   No sistema implementado, só faz sentido suspender prontos e bloqueados por IO
+    def suspend(self, pid, tp):
+
+        p = self.process_by_pid(pid)
+
+        for i in range(tp.registros):
+
+            r = tp.registros[i]
+
+            if r.p:
+
+                page = self.MP.quadros[r.numQuadro].pagina
+
+                if r.m:
+                    self.MS.swap_out(pid, page.num, page)
+                
+                self.MP.retira_pagina(r.numQuadro)
+                r.desaloca_registro()
+
+        if p.pcb.estado == "pronto":
+
+            self.fila_de_processos.transita(pid, p.pcb.estado, "sus_pronto")
+        
+        else:
+
+            if p.pcb.estado == "bloqueado":
+
+                self.fila_de_processos.transita(pid, "bloqueado_IO", "sus_bloqueado")
+
+        p.pcb.setSuspensoTrue()
+
 
     #   Método utilizado para cancelar a suspensão de um processo escolhido pelo swapper
+    #   É assumido que se um processo é escolhido pelo escalonador ele deve ter o estado
+    #   de suspenso removido imediatamente
     def unsuspend(self, pid):
         
-        pass
+        p = self.process_by_pid(pid)
+
+        if not p.pcb.suspenso:
+            erro("Tentativa de remover suspensão de Processo não suspenso " + pid)
+
+        p.pcb.setSuspensoFalse()
+
+        if p.pcb.estado == "bloqueado":
+            self.fila_de_processos.transita(pid, "sus_bloqueado", "bloqueado_IO")
+        else:
+            self.fila_de_processos.transita(pid, "sus_pronto", "pronto")    #Eu acredito que não é muito inteligente carregar a imagem de um processo bloqueado
+            self.carrega_imagem_MP(p)
