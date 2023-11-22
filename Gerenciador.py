@@ -108,7 +108,7 @@ class Gerenciador:
 
             if (not quadro.presenca):
                 self.MP.aloca_pagina(i, pagina)
-                new_tp.aloca_entrada(new_page_num, lru_index)
+                new_tp.aloca_entrada(new_page_num, i)
                 return
             
             if (quadro.last_update > max_age):
