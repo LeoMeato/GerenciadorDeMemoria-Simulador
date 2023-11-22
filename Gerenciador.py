@@ -171,7 +171,7 @@ class Gerenciador:
     
     def ganha_CPU(self, pid):
 
-        if (self.executando != None):
+        if self.executando != None:
             self.executando.pcb.setPronto()
             self.fila_de_processos.pronto.adicionar(self.executando)
         
