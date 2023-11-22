@@ -106,7 +106,7 @@ class Gerenciador:
 
             quadro = self.MP.quadros[i]
 
-            if (not quadro.presenca):
+            if not quadro.presenca:
                 self.MP.aloca_pagina(i, pagina)
                 new_tp.aloca_entrada(new_page_num, i)
                 return

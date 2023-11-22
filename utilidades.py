@@ -33,4 +33,4 @@ def decimal_binario(str):
     convertido += num
     return int(convertido)
 
-print(decimal_binario("100"))
+print(decimal_binario(input()))
