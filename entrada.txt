@@ -11,8 +11,8 @@ P2	R	1	#
 P2	R	10	#
 P2	R	11	#
 P3	R	100	#
-P5	C	20	#Cria_processo_5
-P4	C	20	#Cria_processo_4
+P5	C	10100	#Cria_processo_5
+P4	C	10100	#Cria_processo_4
 P1	I		#Entrada
 P4	R	1111	#
 P5	R	1111	#

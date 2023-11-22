@@ -16,11 +16,14 @@ teclado = janela.get_keyboard()
 pressed = False
 
 global gm
+global arquivo
 
 gm = Gerenciador(6, 8, 2, 5, 4, "entrada.txt")
 gm.cria_processo(2, 16)
 gm.fila_de_processos.transita(2, "novo", "pronto")
 gm.ganha_CPU(2)
+
+arquivo = open(gm.arq_entrada, "r")
 
 
 global podeExecutar
@@ -120,12 +123,12 @@ def atualiza():
                 tps[i].add((P, M, r.numQuadro))
 
 def executar():
-    arquivo = open(gm.arq_entrada, "r")
     line = arquivo.readline()
     pieces = line.split()
     pid = int(pieces[0].split("P")[1])
     inst = pieces[1]
     end = pieces[2]
+    print(line)
     if inst == "P":
         pass
     elif inst == "I":
@@ -216,16 +219,16 @@ pauseButton = Sprite("Sprites/Botao_Pausa.png")
 pauseButton.set_position(1275, 750)
 
 tps = [None]*3
-tps[0] = TabelaDePaginasUI(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 0")
-tps[1] = TabelaDePaginasUI(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 1", 300)
-tps[2] = TabelaDePaginasUI(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], "TP - Processo 2", 550)
+tps[0] = TabelaDePaginasUI(janela, [], "TP - Processo 0")
+tps[1] = TabelaDePaginasUI(janela, [], "TP - Processo 1", 300)
+tps[2] = TabelaDePaginasUI(janela, [], "TP - Processo 2", 550)
 tps[2].add((0, 0, "End yyy"))
 
 for i in range(7):
-    tps.append(TabelaDePaginasUI(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], f"TP - Processo {i + 3}", 85 + i*250, 100))
+    tps.append(TabelaDePaginasUI(janela, [], f"TP - Processo {i + 3}", 85 + i*250, 100))
 
 for i in range(7):
-    tps.append(TabelaDePaginasUI(janela, [(0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx"), (0, 0, "End xxx")], f"TP - Processo {i + 10}", 85 + i*250, 600))
+    tps.append(TabelaDePaginasUI(janela, [], f"TP - Processo {i + 10}", 85 + i*250, 600))
 
 '''
 print("Informe numero de bits da pagina, e numero de bits dos quadros")
@@ -254,7 +257,7 @@ while True:
     janela.set_background_color([255, 255, 255])
 
     tempo += janela.delta_time()
-    print(tempo)
+    #print(tempo)
     if tempo > sleepTime:
         podeExecutarPorTempo = True
 
