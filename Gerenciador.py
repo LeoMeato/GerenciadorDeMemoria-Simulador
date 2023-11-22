@@ -393,6 +393,9 @@ class Gerenciador:
         self.msgs.append(f"Processo P{tp.id} escolhido")
         self.suspend(self, tp.id, tp)
 
+        self.time_since_swap = 0
+        self.faults_since_swap = 0
+
 
     #   Método utilizado para suspender um processo
     #   No sistema implementado, só faz sentido suspender prontos e bloqueados por IO

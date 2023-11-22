@@ -134,21 +134,42 @@ def executar():
         end = pieces[2]
         print(line)
         if inst == "P":
+
+            p = gm.process_by_pid(pid)
+            if p.pcb.suspenso:
+                gm.unsuspend(pid)
+
             gm.CPUinstruction(pid, end)
 
         elif inst == "I":
+
+            p = gm.process_by_pid(pid)
+            if p.pcb.suspenso:
+                gm.unsuspend(pid)
             gm.begin_IO_instruction(pid)
 
         elif inst == "R":
+
+            p = gm.process_by_pid(pid)
+            if p.pcb.suspenso:
+                gm.unsuspend(pid)
+
             gm.MPread(pid, end)
 
         elif inst == "W":
-            gm.MPwrite(pid, end)
+
+            p = gm.process_by_pid(pid)
+            if p.pcb.suspenso:
+                gm.unsuspend(pid)
+
+            gm.MPwrite(pid, end, write=True)
 
         elif inst == "C":
+            
             size = binario_decimal(end)
             gm.cria_processo(pid, size)
             gm.fila_de_processos.transita(pid, "novo", "pronto")
+            
         elif inst == "T":
             gm.terminateProcess(pid)
         elif inst == "E":
