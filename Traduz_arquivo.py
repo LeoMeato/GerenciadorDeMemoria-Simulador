@@ -11,7 +11,8 @@ def traduz(path):
         temp = texto[i].split()
         parcial.append(temp[0])
         parcial.append(temp[1])
-        parcial.append(decimal_binario(temp[2]))
+        if len(temp) == 4:
+            parcial.append(decimal_binario(temp[2]))
         texto_sub.append(parcial)
 
     arq = open("bin.txt", "w")
