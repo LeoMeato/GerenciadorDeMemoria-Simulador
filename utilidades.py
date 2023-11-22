@@ -18,6 +18,19 @@ dic = {
     "nya": 8653,
     "low": 64531
 }
-
+'''
 for i in dic.values():
-    print(i)
+    print(i)'''
+
+def decimal_binario(str):
+    num = int(str)
+    convertido = 0
+    multiplica = 1
+    while num != 1 and num != 0:
+        convertido += (int(num % 2) * multiplica)
+        num = num / 2
+        multiplica *= 10
+    convertido += num
+    return int(convertido)
+
+print(decimal_binario("100"))
