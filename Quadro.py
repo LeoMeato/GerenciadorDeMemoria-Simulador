@@ -2,6 +2,7 @@ class Quadro:
 
     pagina = None
     presenca = False
+    last_update = 0
 
     def __init___(self):
         self.last_update = 0

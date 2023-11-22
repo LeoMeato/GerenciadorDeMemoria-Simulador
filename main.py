@@ -58,10 +58,7 @@ dma = Container("Sprites/Dma_Label.jpg", "DMA"); dma.set_position(1250, 630)
 sleepTime = 0.2
 
 def atualiza():
-    if gm.msgs != []:
-        messageBox.newMessage(gm.msgs[0])
-        gm.msgs.pop(0)
-    else:
+        
         global tfp
         global mdpf
         global nfp
@@ -123,31 +120,35 @@ def atualiza():
                 tps[i].add((P, M, r.numQuadro))
 
 def executar():
-    line = arquivo.readline()
-    pieces = line.split()
-    pid = int(pieces[0].split("P")[1])
-    inst = pieces[1]
-    end = pieces[2]
-    print(line)
-    if inst == "P":
-        pass
-    elif inst == "I":
-        gm.begin_IO_instruction(pid)
+    if gm.msgs != []:
+        messageBox.newMessage(gm.msgs[0])
+        gm.msgs.pop(0)
+    else:
+        line = arquivo.readline()
+        pieces = line.split()
+        pid = int(pieces[0].split("P")[1])
+        inst = pieces[1]
+        end = pieces[2]
+        print(line)
+        if inst == "P":
+            pass
+        elif inst == "I":
+            gm.begin_IO_instruction(pid)
 
-    elif inst == "R":
-        gm.MPread(pid, end)
+        elif inst == "R":
+            gm.MPread(pid, end)
 
-    elif inst == "W":
-        gm.MPwrite(pid, end)
-        pass
-    elif inst == "C":
-        size = binario_decimal(end)
-        gm.cria_processo(pid, size)
-        gm.fila_de_processos.transita(pid, "novo", "pronto")
-    elif inst == "T":
-        gm.terminateProcess(pid)
-    elif inst == "E":
-        gm.end_IO_instruction(pid)
+        elif inst == "W":
+            gm.MPwrite(pid, end)
+            pass
+        elif inst == "C":
+            size = binario_decimal(end)
+            gm.cria_processo(pid, size)
+            gm.fila_de_processos.transita(pid, "novo", "pronto")
+        elif inst == "T":
+            gm.terminateProcess(pid)
+        elif inst == "E":
+            gm.end_IO_instruction(pid)
 
 '''
 #Leitura de Arquivo
