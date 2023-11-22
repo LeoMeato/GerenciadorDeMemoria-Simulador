@@ -126,14 +126,23 @@ class Gerenciador:
         old_pid = self.pid_of_page(quadro.pagina)
         old_page_num = self.num_of_page(quadro.pagina)
         old_tp = self.TP_by_pid(old_pid)
-        
+
         if old_tp.registros[old_page_num].m:    #Se a página antiga não foi modificada, evita o swapout desnecessário
+            
             self.MS.swap_out(old_pid, old_page_num, quadro.pagina)
+            self.msgs.append(f"Página antiga alterada na MS")
+
         self.MP.retira_pagina(lru_index)
+        self.msgs.append(f"Página {old_page_num} de {old_pid} removida de {lru_index}")
+
         old_tp.desaloca_entrada(old_page_num)
+        self.msgs.append(f"TP de {old_pid} atualizada")
 
         self.MP.aloca_pagina(lru_index, pagina)
+        self.msgs.append(f"Página {new_page_num} de {new_pid} posta em {lru_index}")
+
         new_tp.aloca_entrada(new_page_num, lru_index)
+        self.msgs.append(f"TP de {new_pid} atualizada")
 
         self.atualizaDados()
 
@@ -178,12 +187,17 @@ class Gerenciador:
     def ganha_CPU(self, pid):
         
         if self.executando != None:
+
+            self.msgs.append(f"P{self.executando.pcb.id} perde CPU")
+
             self.executando.pcb.setPronto()
             self.fila_de_processos.pronto.adicionar(self.executando)
             self.executando = None
         
         self.executando = self.fila_de_processos.pronto.remove_pid(pid)
         self.executando.pcb.setExecutando()
+        
+        self.msgs.append(f"P{self.executando.pcb.id} ganha CPU")
 
     #   Método utilizado para manter a consistência das informações do gerenciador
     #   Deve ser chamado ao fim de qualquer método que não seja considerado de duração nula
@@ -204,8 +218,9 @@ class Gerenciador:
     #   Método genérico que representa um acesso qualquer à memória principal
     #   Por ser um método auxiliar, é considerado tempo 0 para a chamada de atualizaDados()
     #   Supõe que pid é o id de um processo que ganhou no instante da chamada
-    def MPaccess(self, pid, end):
+    def MPaccess(self, pid, end, write=False):
 
+        self.msgs.append(f"P{pid} solicita endereço {end}")
         tp = self.TP_by_pid(pid)
         p = self.process_by_pid(pid)
 
@@ -214,25 +229,33 @@ class Gerenciador:
 
         offset_bin = end[self.bits_log-self.bits_frame : ]
         offset = binario_decimal(offset_bin)
+        self.msgs.append(f"Nº de pagina: {n_pag} Offset: {offset}")
 
         num_quadro = tp.consulta_entrada(n_pag)
+        self.msgs.append(f"TP de {pid} é consultada")
         if not num_quadro:  #Falta de páginas
-
+            
+            self.msgs.append(f"Falta de páginas !!")
             self.count_page_fault()
 
             self.executando = None
             p.pcb.setBloqueado()
             self.fila_de_processos.bloqueado_page_fault.adicionar(p)
+            self.msgs.append(f"P{pid} é bloqueado por page fault")
 
             page = self.MS.swap_in(pid, n_pag)
+            self.msgs.append(f"Página de {pid} trazida da MS")
             self.add_LRU(page)
 
+            self.msgs.append(f"P{pid} retorna à execução")
             p.pcb.setExecutando()
             self.executando = self.fila_de_processos.bloqueado_page_fault.remove_pid(pid)
 
             num_quadro = tp.consulta_entrada(n_pag)
 
         pagina_acessada = self.MP.consulta_pagina(num_quadro)
+        if write:
+            tp.registros[n_pag].m = True
 
         return pagina_acessada
 
@@ -240,6 +263,7 @@ class Gerenciador:
 
         self.ganha_CPU(pid)
         used_page = self.MPaccess(pid, end)
+        self.msgs.append(f"P{pid} realiza a instrução de {end}")
 
         self.atualizaDados()
     
@@ -251,14 +275,17 @@ class Gerenciador:
 
         self.executando = None
         self.fila_de_processos.bloqueado_IO.adicionar(p)
+        self.msgs.append(f"P{pid} perde CPU e é bloqueado por I/O")
 
         if (self.emIO == None):
             self.emIO = p
+            self.msgs.append(f"P{pid} recebe o DMA livre")
         
         self.atualizaDados()
 
     def end_IO_instruction(self, pid):
 
+        self.msgs.append(f"Fim do I/O de P{pid}")
         p = self.emIO
 
         if p.pcb.suspenso:
@@ -268,9 +295,12 @@ class Gerenciador:
         else:
 
             self.fila_de_processos.transita(pid, "bloqueado_IO", "pronto")
-        
+
+        self.msgs.append(f"P{pid} é desbloqueado")
+
         if len(self.fila_de_processos.bloqueado_IO.fila) != 0:
             self.emIO = self.fila_de_processos.bloqueado_IO.remover()
+            self.msgs.append(f"{self.emIO.pcb.id} recebe o DMA")
 
         self.atualizaDados()
 
@@ -279,14 +309,14 @@ class Gerenciador:
 
         self.ganha_CPU(pid)
         used_page = self.MPaccess(pid, end)
-
+        self.msgs.append(f"P{pid} realiza a leitura em {end}")
         self.atualizaDados()
 
     def MPwrite(self, pid, end):
 
         self.ganha_CPU(pid)
         used_page = self.MPaccess(pid, end)
-
+        self.msgs.append(f"P{pid} realiza a escrita em {end}")
         self.atualizaDados()
 
 
@@ -294,25 +324,33 @@ class Gerenciador:
     #   seja lá qual for o motivo
     def terminateProcess(self, pid):
 
+        self.msgs.append(f"Fim de P{pid}")
         tp = self.TP_by_pid(pid)
 
         p = self.process_by_pid(pid)
         if self.executando == p:
             self.executando = None
+            self.msgs.append(f"P{pid} perde CPU")
 
         elif self.emIO == p:
             self.emIO = None
+            self.msgs.append(f"P{pid} perde DMA")
 
         self.fila_de_processos.purge(pid)
+        self.msgs.append(f"P{pid} é removido das filas")
         self.tabela_de_processos.remove(p)
+        #self.msgs.append(f"P{pid} removido da tabela de processos") grande demais para a caixa de mensagens
 
         for r in tp.registros:
 
             if (r.p):
                 self.MP.retira_pagina(r.numQuadro)
+        self.msgs.append(f"Páginas  em MP removidas")
 
         self.MS.remove_image(p)
+        self.msgs.append(f"Imagems de P{pid} retirada da MS")
         self.TP.remove(tp)
+        self.msgs.append(f"TP de P{pid} destruída")
 
         self.atualizaDados()
 
@@ -332,7 +370,7 @@ class Gerenciador:
 
         max_use = -1
         max_use_i = 0
-
+        self.msgs.append(f"Chamando swapper")
         for i in range(len(self.TP)):
 
             tp = self.TP[i]
@@ -352,6 +390,7 @@ class Gerenciador:
 
         
         tp = self.TP[max_use_i]
+        self.msgs.append(f"Processo P{tp.id} escolhido")
         self.suspend(self, tp.id, tp)
 
 
@@ -359,6 +398,7 @@ class Gerenciador:
     #   No sistema implementado, só faz sentido suspender prontos e bloqueados por IO
     def suspend(self, pid, tp):
 
+        self.msgs.append(f"Suspendendo P{pid}")
         p = self.process_by_pid(pid)
 
         for i in range(tp.registros):
@@ -375,6 +415,8 @@ class Gerenciador:
                 self.MP.retira_pagina(r.numQuadro)
                 r.desaloca_registro()
 
+        self.msgs.append(f"Páginas de P{pid} retiradas da MP")
+
         if p.pcb.estado == "pronto":
 
             self.fila_de_processos.transita(pid, p.pcb.estado, "sus_pronto")
@@ -385,6 +427,7 @@ class Gerenciador:
 
                 self.fila_de_processos.transita(pid, "bloqueado_IO", "sus_bloqueado")
 
+        self.msgs.append(f"P{pid} suspenso com sucesso")
         p.pcb.setSuspensoTrue()
 
 
@@ -393,6 +436,7 @@ class Gerenciador:
     #   de suspenso removido imediatamente
     def unsuspend(self, pid):
         
+        self.msgs.append(f"Retirando suspensão de P{pid}")
         p = self.process_by_pid(pid)
 
         if not p.pcb.suspenso:
@@ -404,3 +448,5 @@ class Gerenciador:
             self.fila_de_processos.transita(pid, "sus_bloqueado", "bloqueado_IO")
         else:
             self.fila_de_processos.transita(pid, "sus_pronto", "pronto")
+
+        self.msgs.append(f"P{pid} não é mais suspenso")
