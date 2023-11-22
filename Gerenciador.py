@@ -27,7 +27,7 @@ class Gerenciador:
         #   do gerenciador e coleta de dados de execução
         self.clock = 0
         self.time_since_swap = 0
-        self.faults_since_swap = 0
+        self.faults_since_swap = -3 #Inicializado como negativo para evitar suspensões no início da simulação
 
         #   Essas variáveis são coletadas ao longo da execução de uma instância
         #   e exibidas em uma interface
@@ -67,6 +67,7 @@ class Gerenciador:
 
 
     #   Método responsável por alocar as estruturas necessárias para administrar um novo processo
+    #   e adicionar suas páginas iniciais à MP
     def cria_processo(self, pid, size):
 
         self.msgs.append(f"Criação de processo {pid}: tamanho {size}")
@@ -81,8 +82,10 @@ class Gerenciador:
 
         self.tabela_de_processos.append(p)
         self.msgs.append(f"{pid} para Tabela de Processos")
+
         self.MS.load_image(p)
         self.msgs.append(f"Imagem de {pid} carregada para MS")
+
         self.carrega_imagem_MP(p)
         self.msgs.append(f"Parte de {pid} carregada em MP")
 
@@ -97,7 +100,6 @@ class Gerenciador:
                 i += 1
 
     #   Método implementa a polítical de substituição de páginas do sistema
-    #   Desculpa pelo método gigante gente
     def add_LRU(self, pagina):
 
         new_pid = self.pid_of_page(pagina)
@@ -120,8 +122,7 @@ class Gerenciador:
                 lru_index = i
                 max_age = quadro.last_update
 
-
-        ##### IMPORTANTE: USAR O BIT M PARA VERIFICAR SE A CHAMDA DE SWAP OUT FAZ SENTIDO
+        #   Se não houver nenhum quadro vazio, é pego o menos utilizado
         self.msgs.append(f"Quadro LRU: {lru_index}")
         old_pid = self.pid_of_page(quadro.pagina)
         old_page_num = self.num_of_page(quadro.pagina)
@@ -148,15 +149,16 @@ class Gerenciador:
 
 
     #   Método que isola a abstração da busca pelo processo de uma página
-    #   Perguntar os limites de implementação para a professora
+    #   Em um sistema normal essas navegações seriam obsoletas, visto que
+    #   a tabela de processos, o pcb e as tabelas de páginas permitem amplo
+    #   acesso às informações de gerenciamento
+    #   Muitos atributos são redundantes por limitações de interface
     def pid_of_page(self, pagina):
         return pagina.id
 
-    #   Idem
     def num_of_page(self, pagina):
         return pagina.num
     
-    #   Métodos que existem por pura conveniência
     def process_by_pid(self, pid):
 
         for p in self.tabela_de_processos:
@@ -176,6 +178,7 @@ class Gerenciador:
         self.page_faults += 1
         self.faults_since_swap += 1
 
+    #   Rotina do gerenciador para coleta de estatísticas
     def get_mem_waste(self):
 
         waste = 0
@@ -184,6 +187,9 @@ class Gerenciador:
                 waste += self.frame_size - q.pagina.tam
         return waste
     
+    #   Método chamado para permitir que um processo X ganhe CPU
+    #   Chamado antes da execução de quase todas as instruções relevantes
+    #   por motivos óbvios
     def ganha_CPU(self, pid):
         
         if self.executando != None:
@@ -217,7 +223,8 @@ class Gerenciador:
 
     #   Método genérico que representa um acesso qualquer à memória principal
     #   Por ser um método auxiliar, é considerado tempo 0 para a chamada de atualizaDados()
-    #   Supõe que pid é o id de um processo que ganhou no instante da chamada
+    #   Supõe que pid é o id de um processo que ganhou CPU no instante da chamada
+    #   Calcula os números de páginas, quadros e etc para acessar a MP
     def MPaccess(self, pid, end, write=False):
 
         self.msgs.append(f"P{pid} solicita endereço {end}")
@@ -259,6 +266,7 @@ class Gerenciador:
 
         return pagina_acessada
 
+    #   Método representa uma instrução de CPU localizada em end
     def CPUinstruction(self, pid, end):
 
         self.ganha_CPU(pid)
@@ -267,6 +275,7 @@ class Gerenciador:
 
         self.atualizaDados()
     
+    #   Método que representa o ínicio de uma requisição de I/O por um processo
     def begin_IO_instruction(self, pid):
         
 
@@ -283,6 +292,8 @@ class Gerenciador:
         
         self.atualizaDados()
 
+    #   Método utilizado quando o fim de uma operação de I/O
+    #   é sinalizado
     def end_IO_instruction(self, pid):
 
         self.msgs.append(f"Fim do I/O de P{pid}")
@@ -305,6 +316,7 @@ class Gerenciador:
         self.atualizaDados()
 
 
+    #   Método representa uma leitura simples na MP
     def MPread(self, pid, end):
 
         self.ganha_CPU(pid)
@@ -312,6 +324,7 @@ class Gerenciador:
         self.msgs.append(f"P{pid} realiza a leitura em {end}")
         self.atualizaDados()
 
+    #   Representa uma escrita simples na MP
     def MPwrite(self, pid, end):
 
         self.ganha_CPU(pid)
@@ -321,7 +334,7 @@ class Gerenciador:
 
 
     #   Método utilizado para desalocar as estruturas associadas a um processo após o seu fim
-    #   seja lá qual for o motivo
+    #   Purga qualquer resquício do processo, independente de seu estado
     def terminateProcess(self, pid):
 
         self.msgs.append(f"Fim de P{pid}")
