@@ -22,7 +22,7 @@ class Gerenciador:
     #   Tamanhos são recebidos no formato log2(tamanho desejado) por padrão
     #   n_residente_inicial se refere ao tamanho do conjunto residente alocado na criação de um processo
     #   que passa pela transição (novo, pronto)
-    def __init__(self, bits_mp, bits_ms, bits_frame, bits_log, n_residente, max_fault_rate, arq_entrada):
+    def __init__(self, bits_mp, bits_ms, bits_frame, bits_log, n_residente, arq_entrada, max_fault_rate=0.35):
         
         #   A variável clock é usada como indicação de tempo para a implementação de políticas
         #   do gerenciador e coleta de dados de execução
