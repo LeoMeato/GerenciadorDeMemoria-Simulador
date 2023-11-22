@@ -125,7 +125,7 @@ def executar():
     elif inst == "W":
         pass
     elif inst == "C":
-        pass
+        end = binario_decimal(end)
     elif inst == "T":
         pass
     elif inst == "E":
