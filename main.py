@@ -123,23 +123,27 @@ def executar():
     arquivo = open(gm.arq_entrada, "r")
     line = arquivo.readline()
     pieces = line.split()
-    pid = pieces[0].split("P")[1]
+    pid = int(pieces[0].split("P")[1])
     inst = pieces[1]
     end = pieces[2]
     if inst == "P":
         pass
     elif inst == "I":
-        pass
+        gm.begin_IO_instruction(pid)
+
     elif inst == "R":
-        pass
+        gm.MPread(pid, end)
+
     elif inst == "W":
+        gm.MPwrite(pid, end)
         pass
     elif inst == "C":
-        end = binario_decimal(end)
+        size = binario_decimal(end)
+        gm.cria_processo(pid, size)
     elif inst == "T":
-        pass
+        gm.terminateProcess(pid)
     elif inst == "E":
-        pass
+        gm.end_IO_instruction(pid)
 
 '''
 #Leitura de Arquivo
