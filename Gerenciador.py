@@ -69,16 +69,18 @@ class Gerenciador:
     #   Método responsável por alocar as estruturas necessárias para administrar um novo processo
     def cria_processo(self, pid, size):
 
-
+        self.msgs.append(f"Criação de processo {pid}: tamanho {size}")
         p = Processo(size, self.frame_size, pid)
         self.fila_de_processos.novo.adicionar(p)
+        self.msgs.append(f"Processo {pid} vai para a fila de novos")
 
         n_paginas = ceil(size/self.frame_size)
         tp = TabelaDePaginas(pid, n_paginas)
         self.TP.append(tp)
+        self.msgs.append(f"Tabela de páginas {pid} criada")
 
         self.tabela_de_processos.append(p)
-
+        self.msgs.append(f"")
         self.MS.load_image(p)
         self.carrega_imagem_MP(p)
 
