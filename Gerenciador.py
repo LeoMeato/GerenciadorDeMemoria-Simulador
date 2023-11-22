@@ -176,6 +176,7 @@ class Gerenciador:
         if self.executando != None:
             self.executando.pcb.setPronto()
             self.fila_de_processos.pronto.adicionar(self.executando)
+            self.executando = None
         
         self.executando = self.fila_de_processos.pronto.remove_pid(pid)
         self.executando.pcb.setExecutando()
