@@ -19,6 +19,7 @@ global gm
 gm = Gerenciador(6, 8, 2, 5, 4, "blabla.txt")
 gm.cria_processo(1, 2)
 gm.cria_processo(2, 16)
+gm.fila_de_processos.transita(2, "novo", "pronto")
 gm.ganha_CPU(2)
 
 global podeExecutar
