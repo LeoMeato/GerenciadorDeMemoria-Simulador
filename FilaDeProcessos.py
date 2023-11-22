@@ -33,6 +33,9 @@ class FilaDeProcessos:
             erro("Transição (" + fila1 + "," + fila2 + ") não faz sentido")
 
         processo = self.filas[fila1].remove_pid(pid)
+        if (processo == None):
+            erro("Transição inválida. Processo " + pid + " não encontrado na fila " + fila1)
+            
         self.filas[fila2].adicionar(processo)
     
     def purge(self, pid):
@@ -60,3 +63,4 @@ class Fila:
             if (p.pcb.id == pid):
                 self.fila.remove(p)
                 return p
+        return None
