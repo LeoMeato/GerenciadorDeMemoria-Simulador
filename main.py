@@ -16,11 +16,11 @@ pressed = False
 
 global gm
 
-gm = Gerenciador(6, 8, 2, 5, 4, "blabla.txt")
-gm.cria_processo(1, 2)
+gm = Gerenciador(6, 8, 2, 5, 4, "entrada.txt")
 gm.cria_processo(2, 16)
 gm.fila_de_processos.transita(2, "novo", "pronto")
 gm.ganha_CPU(2)
+
 
 global podeExecutar
 
@@ -108,6 +108,28 @@ def atualiza():
             else:
                 M = 0
             tps[i].add((P, M, r.numQuadro))
+
+def executar():
+    arquivo = open(gm.arq_entrada, "r")
+    line = arquivo.readline()
+    pieces = line.split()
+    pid = pieces[0].split("P")[1]
+    inst = pieces[1]
+    end = pieces[2]
+    if inst == "P":
+        pass
+    elif inst == "I":
+        pass
+    elif inst == "R":
+        pass
+    elif inst == "W":
+        pass
+    elif inst == "C":
+        pass
+    elif inst == "T":
+        pass
+    elif inst == "E":
+        pass
 
 '''
 #Leitura de Arquivo
@@ -213,7 +235,7 @@ page = 1
 
 while True:
     if podeExecutar:
-        # chama o gerenciador aqui
+        executar()
         atualiza()
     janela.set_background_color([255, 255, 255])
     if teclado.key_pressed("1"):

@@ -1,0 +1,1 @@
+print("P1".split("P")[1])
