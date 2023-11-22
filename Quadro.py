@@ -20,7 +20,7 @@ class Quadro:
         self.acessado()
     
     def desaloca_pagina(self):
-        self.pagina = False#Libera o quadro para entrada de outra pagina
+        self.pagina = None#Libera o quadro para entrada de outra pagina
         self.presenca = False
 
 
