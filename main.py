@@ -18,7 +18,7 @@ pressed = False
 global gm
 global arquivo
 
-gm = Gerenciador(6, 8, 2, 5, 4, "entrada.txt")
+gm = Gerenciador(4, 8, 2, 5, 2, "entrada.txt")
 # gm.cria_processo(2, 16)
 # gm.fila_de_processos.transita(2, "novo", "pronto")
 # gm.ganha_CPU(2)
@@ -126,6 +126,9 @@ def executar():
     else:
         line = arquivo.readline()
         pieces = line.split()
+        if len(pieces) == 0:#############################################Fim do arquivo encontrado
+            input()
+            exit()
         pid = int(pieces[0].split("P")[1])
         inst = pieces[1]
         end = pieces[2]
