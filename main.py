@@ -20,7 +20,7 @@ global arquivo
 
 # Nota: toda a lógica do gerenciador está implementada na classe Gerenciador. A maior parte das estruturas manipuladas na main que não envolvem gm são relativas à interface.
 
-gm = Gerenciador(6, 8, 2, 5, 2, "entrada.txt")
+gm = Gerenciador(6, 8, 2, 5, 2, "caso_simples.txt")
 # gm.cria_processo(2, 16)
 # gm.fila_de_processos.transita(2, "novo", "pronto")
 # gm.ganha_CPU(2)
