@@ -18,6 +18,8 @@ pressed = False
 global gm
 global arquivo
 
+# Nota: toda a lógica do gerenciador está implementada na classe Gerenciador. A maior parte das estruturas manipuladas na main que não envolvem gm são relativas à interface.
+
 gm = Gerenciador(6, 8, 2, 5, 2, "entrada.txt")
 # gm.cria_processo(2, 16)
 # gm.fila_de_processos.transita(2, "novo", "pronto")
@@ -59,6 +61,7 @@ sleepTime = 0.2
 finalizado = False
 
 def atualiza():
+        # função que faz a conexão da interface com os dados do gerenciador
         
         global tfp
         global mdpf
@@ -121,6 +124,7 @@ def atualiza():
                 tps[i].add((P, M, r.numQuadro))
 
 def executar():
+    # função que de fato chama o gerenciador
     global finalizado
     if gm.msgs != []:
         messageBox.newMessage(gm.msgs[0])
@@ -180,81 +184,21 @@ def executar():
         else:
             pass
 
-'''
-#Leitura de Arquivo
-arquivo = open("nome_arq", 'r')
-instrucoes = arquivo.readlines()
-arquivo.close'''
-"""
-processos = []
-id_processos = 0
-for i in range(len(instrucoes)):
-    instrucoes[i][0] = binario_decimal(instrucoes[i][0]) # Transforma binario em decimal
-    if instrucoes[i][1] == 'P': # instrução a ser executada pela CPU
-        valido = True
-    elif instrucoes[i][1] == 'I': # instrução de I/O
-        valido = True
-
-    elif instrucoes[i][1] == 'C': # criação (submissão de um processo)
-        valido = True
-        num_processo = instrucoes[i][0]
-        tam_processo = instrucoes[i][2]
-        if len(instrucoes[i]) > 3:
-            unidade = instrucoes[i][3]
-            if unidade == "KB":
-                tam_processo = int(tam_processo) * 210
-            elif unidade == "MB":
-                tam_processo = int(tam_processo) * 220
-            elif unidade == "GB":
-                tam_processo = int(tam_processo) * 2**30
-        processos.append(Grupo(Processo(tam_processo, id_processos), janela))
-        coluna.add(processos[len(processos)-1])
-        id_processos += 1
-
-    elif instrucoes[i][1] == 'R': # pedido de leitura em um endereço lógico
-        valido = True
-
-    elif instrucoes[i][1] == 'W': # pedido de escrita em um endereço lógico de um dado valor
-        valido = True
-
-    elif instrucoes[i][1] == 'T': # terminação de processo
-        valido = True
-    else:
-        print("Instrução inválido")
-"""
-
-processos = []
-for i in range(40):
-    processos.append(Processo(20, 2, i))
-
+# criação da interface da mp
 for i in range(tam_mp):
     mp.add(Container("Sprites/Quadro_Label.jpg"))
 
+# criação da interface das filas
 nomesDasFilas = ("Novo", "Pronto", "Bloq. Page Fault", "Bloq. por E/S", "Pronto-Suspenso", "Bloq.-Suspenso")
 filas = []
 for i in range (6):
     filas.append(Coluna(20 + i * 170, 610, nomesDasFilas[i]))
-    '''for j in range(2):
-        filas[i].add(Grupo(processos[i*2 + j], janela))
 
-filas[3].add(Grupo(processos[14], janela))
-filas[3].add(Grupo(processos[15], janela))
-filas[3].add(Grupo(processos[16], janela))
-filas[3].add(Grupo(processos[18], janela))
-filas[3].add(Grupo(processos[19], janela))
-filas[5].add(Grupo(processos[20], janela))
-filas[5].add(Grupo(processos[21], janela))'''
-
-messageBox = MessageBox(12, 850, 30, janela)
-
-pauseButton = Sprite("Sprites/Botao_Pausa.png")
-pauseButton.set_position(1275, 750)
-
+# criação da interface das tabelas de páginas
 tps = [None]*3
 tps[0] = TabelaDePaginasUI(janela, [], "TP - Processo 0")
 tps[1] = TabelaDePaginasUI(janela, [], "TP - Processo 1", 300)
 tps[2] = TabelaDePaginasUI(janela, [], "TP - Processo 2", 550)
-tps[2].add((0, 0, "End yyy"))
 
 for i in range(7):
     tps.append(TabelaDePaginasUI(janela, [], f"TP - Processo {i + 3}", 85 + i*250, 100))
@@ -262,34 +206,22 @@ for i in range(7):
 for i in range(7):
     tps.append(TabelaDePaginasUI(janela, [], f"TP - Processo {i + 10}", 85 + i*250, 600))
 
-'''
-print("Informe numero de bits da pagina, e numero de bits dos quadros")
-tam_pag, tam_qua = input().split()
-tam_pag = int(tam_pag)
-tam_qua = int(tam_qua)
-memoria = MemoriaPrincipal(tam_pag, tam_qua) #Memoria Principal inicializada
 
-t = TabelaDePaginas(1, 10)
-f = FilaDeProcessos()
+messageBox = MessageBox(12, 850, 30, janela)
 
-for c in range(5):
-    f.pronto.adicionar(c)
-for c in range(3):
-    f.pronto.remover()
-
-print(t.id, t.registros[6].numQuadro)
-print(f.pronto.fila)'''             #mo tempão que isso tá aqui comentado. sejá lá quem tiver escrito, pode apagar?
+pauseButton = Sprite("Sprites/Botao_Pausa.png")
+pauseButton.set_position(1275, 750)
 
 page = 1
 
 tempo = 0
 
+# loop da interface
 while True:
 
     janela.set_background_color([255, 255, 255])
 
     tempo += janela.delta_time()
-    #print(tempo)
     if tempo > sleepTime:
         podeExecutarPorTempo = True
 
@@ -345,4 +277,3 @@ while True:
 
 
     janela.update()
-    #erro("oops")
